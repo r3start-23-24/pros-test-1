@@ -25,12 +25,12 @@ void opcontrol() {
 	pros::Motor left_motor_2 (3);
 	pros::Motor right_motor_1 (4);
 	pros::Motor right_motor_2 (5);
-	pros::Motor_Group left_drive_motors (left_motor_1, left_motor_2);
-	pros::Motor_Group right_drive_motors (right_motor_1, right_motor_2);
+	pros::Motor_Group left_drive_motors ({left_motor_1, left_motor_2});
+	pros::Motor_Group right_drive_motors ({right_motor_1, right_motor_2});
 
 	while (true) {
-    	int power = master.get_analog(ANALOG_LEFT_Y);
-	    int turn = master.get_analog(ANALOG_RIGHT_X);
+    	int power = mainController.get_analog(ANALOG_LEFT_Y);
+	    int turn = mainController.get_analog(ANALOG_RIGHT_X);
 	    int left = power + turn;
 	    int right = power - turn;
 	    right *= -1;
@@ -38,6 +38,6 @@ void opcontrol() {
 	    left_drive_motors.move(left);
 		right_drive_motors.move(right);
 
-	    delay(2);
+	    pros::c::delay(2);
 	}
 }
