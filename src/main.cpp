@@ -38,6 +38,7 @@ void opcontrol() {
 	    left_drive_motors.move(left);
 		right_drive_motors.move(right);
 
+		printf("%d", left_motor_1.get_actual_velocity());
 	    pros::c::delay(2);
 	}
 }
