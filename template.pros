@@ -1,0 +1,16 @@
+{
+    "py/object": "pros.conductor.templates.external_template.ExternalTemplate",
+    "py/state": {
+        "metadata": {},
+        "name": "gif-pros",
+        "supported_kernels": "^3.2.0",
+        "system_files": [
+            "include\\gif-pros\\gifdec.h",
+            "firmware\\gif-pros.a",
+            "include\\gif-pros\\gifclass.hpp"
+        ],
+        "target": "v5",
+        "user_files": [],
+        "version": "2.1.1"
+    }
+}
