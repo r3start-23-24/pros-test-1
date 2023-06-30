@@ -1,4 +1,5 @@
 #include "main.h"
+#include "gif-pros/gifclass.hpp"
 
 void initialize() {}
 
@@ -16,7 +17,7 @@ void autonomous() {}
 
 /**
  * If no competition control is connected, this function will run immediately
- * following initialize().
+ * following--ignore-fail-on-non-empty initialize().
  */
 void opcontrol() {
 	pros::Controller mainController (pros::E_CONTROLLER_MASTER);
@@ -39,6 +40,9 @@ void opcontrol() {
 		right_drive_motors.move(right);
 
 		printf("%f", left_motor_1.get_actual_velocity());
+
+		Gif gif("/usd/mygif.gif", lv_scr_act());
+
 	    pros::c::delay(2);
 	}
 }
