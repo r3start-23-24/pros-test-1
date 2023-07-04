@@ -33,6 +33,10 @@ void opcontrol() {
 	pros::Motor cata_motor_2 (7, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
 	pros::Motor_Group cata_motors ({cata_motor_1, cata_motor_2});
 
+	pros::Motor intake_motor_1 (8, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
+	pros::Motor intake_motor_2 (9, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+	pros::Motor_Group intake_motors ({intake_motor_1, intake_motor_2});
+
 	while (true) {
     	int power = mainController.get_analog(ANALOG_LEFT_Y);
 	    int turn = mainController.get_analog(ANALOG_RIGHT_X);
@@ -44,6 +48,19 @@ void opcontrol() {
 		if (mainController.get_digital_new_press(DIGITAL_R1))
 		{
 			cata_motors.move_relative(360, 100);
+		}
+
+		if (mainController.get_digital(DIGITAL_Y))
+		{
+			intake_motors.move(127);
+		}
+		else if (mainController.get_digital(DIGITAL_X))
+		{
+			intake_motors.move(-127);
+		}
+		else
+		{
+			intake_motors.move(0);
 		}
 
 		printf("%f", left_motor_1.get_actual_velocity());
