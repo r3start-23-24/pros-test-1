@@ -50,11 +50,11 @@ void opcontrol() {
 			cata_motors.move_relative(360, 100);
 		}
 
-		if (mainController.get_digital(DIGITAL_Y))
+		if (mainController.get_digital(DIGITAL_L1))
 		{
 			intake_motors.move(127);
 		}
-		else if (mainController.get_digital(DIGITAL_X))
+		else if (mainController.get_digital(DIGITAL_L2))
 		{
 			intake_motors.move(-127);
 		}
