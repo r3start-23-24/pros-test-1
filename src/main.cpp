@@ -1,7 +1,10 @@
 #include "main.h"
 #include "gif-pros/gifclass.hpp"
+#include "lvgl.h"
 
-void initialize() {}
+void initialize() {
+	LV_IMG_DECLARE(DillyPic);
+}
 
 // for when robot is disabled
 void disabled() {}
@@ -65,7 +68,7 @@ void opcontrol() {
 
 		printf("%f", left_motor_1.get_actual_velocity());
 		
-		Gif gif("/usd/mygif.gif", lv_scr_act());
+		//Gif gif("/usd/mygif.gif", lv_scr_act());
 
 	    pros::c::delay(2);
 	}
