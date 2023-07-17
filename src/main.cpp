@@ -3,7 +3,7 @@
 #include "lvgl.h"
 
 void initialize() {
-	LV_IMG_DECLARE(DillyPic);
+	//LV_IMG_DECLARE(DillyPic);
 }
 
 // for when robot is disabled
