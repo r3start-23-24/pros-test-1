@@ -58,38 +58,32 @@ void opcontrol() {
 			cata_motors.move_relative(362, 100);
 		}
 
-		if (mainController.get_digital_new_press(DIGITAL_L1))
+		if (mainController.get_digital_new_press(DIGITAL_X) && intakeOn == false)
 		{
-			if (intakeOn == false)
-			{
-				intake_motors.move(127);
-				intakeOn = true;
-				intakeOnReversed = false;
-			}
-			else
-			{
-				intake_motors.move(0);
-				intakeOn = false;
-				intakeOnReversed = false;
-			}
+			intake_motors.move(127);
+			intakeOn = true;
+			intakeOnReversed = false;
 		}
-		else if (mainController.get_digital_new_press(DIGITAL_L2))
+		else if (mainController.get_digital_new_press(DIGITAL_Y) && intakeOnReversed == false)
 		{
-			if (intakeOnReversed == false)
-			{
-				intake_motors.move(-127);
-				intakeOn = false;
-				intakeOnReversed = true;
-			}
-			else
-			{
-				intake_motors.move(0);
-				intakeOn = false;
-				intakeOnReversed = false;
-			}
+			intake_motors.move(-127);
+			intakeOn = false;
+			intakeOnReversed = true;
 		}
-
-		printf("%f", left_motor_1.get_actual_velocity());
+		else if (mainController.get_digital(DIGITAL_L1))
+		{
+			intake_motors.move(127);
+		}
+		else if (mainController.get_digital(DIGITAL_L2))
+		{
+			intake_motors.move(-127);
+		}
+		else
+		{
+			intake_motors.move(0);
+			intakeOn = false;
+			intakeOnReversed = false;
+		}
 		
 		//Gif gif("/usd/mygif.gif", lv_scr_act());
 
