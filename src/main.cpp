@@ -59,19 +59,38 @@ void opcontrol() {
 			cata_motors.move_relative(362, 100);
 		}
 
-		if (mainController.get_digital_new_press(DIGITAL_X) && intakeOn == false)
+		if (mainController.get_digital_new_press(DIGITAL_X))
 		{
-			intake_motors.move(127);
-			intakeOn = true;
-			intakeOnReversed = false;
+			if (intakeOn)
+			{
+				intake_motors.move(0);
+				intakeOn = false;
+				intakeOnReversed = false;
+			}
+			else
+			{
+				intake_motors.move(127);
+				intakeOn = true;
+				intakeOnReversed = false;
+			}
 		}
-		else if (mainController.get_digital_new_press(DIGITAL_Y) && intakeOnReversed == false)
+		else if (mainController.get_digital_new_press(DIGITAL_Y))
 		{
-			intake_motors.move(-127);
-			intakeOn = false;
-			intakeOnReversed = true;
+			if (intakeOnReversed)
+			{
+				intake_motors.move(0);
+				intakeOn = false;
+				intakeOnReversed = false;
+			}
+			else
+			{
+				intake_motors.move(-127);
+				intakeOn = false;
+				intakeOnReversed = true;
+			}
 		}
-		else if (mainController.get_digital(DIGITAL_L1))
+
+		if (mainController.get_digital(DIGITAL_L1))
 		{
 			intake_motors.move(127);
 		}
@@ -79,11 +98,11 @@ void opcontrol() {
 		{
 			intake_motors.move(-127);
 		}
-		else
+		else if (!(intakeOn || intakeOnReversed))
 		{
 			intake_motors.move(0);
-			intakeOn = false;
-			intakeOnReversed = false;
+			//intakeOn = false;
+			//intakeOnReversed = false;
 		}
 		
 		//Gif gif("/usd/mygif.gif", lv_scr_act());
