@@ -45,7 +45,8 @@ void opcontrol() {
 	pros::Motor_Group intake_motors ({intake_motor_1, intake_motor_2});
 	intake_motors.set_brake_modes(MOTOR_BRAKE_BRAKE);
 
-	//cata_motors.move_relative(120, 100);
+	cata_motors.move_relative(120, 100);
+	cata_rotation_sensor.set_position(0);
 
 	while (true) {
     	int power = mainController.get_analog(ANALOG_LEFT_Y);
@@ -57,7 +58,12 @@ void opcontrol() {
 
 		if (mainController.get_digital_new_press(DIGITAL_R1))
 		{
-			cata_motors.move_relative(362, 100);
+			cata_motors.move(127);
+			while (cata_rotation_sensor.get_position() > 0)
+			{
+				pros::c::delay(2);
+			}
+			cata_motors.move(0);
 		}
 
 		if (mainController.get_digital_new_press(DIGITAL_X))
