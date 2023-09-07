@@ -38,13 +38,14 @@ void opcontrol() {
 	pros::Motor cata_motor_1 (5, pros::E_MOTOR_GEARSET_36, true, pros::E_MOTOR_ENCODER_DEGREES);
 	pros::Motor cata_motor_2 (6, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
 	pros::Motor_Group cata_motors ({cata_motor_1, cata_motor_2});
+	pros::Rotation cata_rotation_sensor (6);
 
 	pros::Motor intake_motor_1 (4, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 	pros::Motor intake_motor_2 (7, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
 	pros::Motor_Group intake_motors ({intake_motor_1, intake_motor_2});
 	intake_motors.set_brake_modes(MOTOR_BRAKE_BRAKE);
 
-	cata_motors.move_relative(120, 100);
+	//cata_motors.move_relative(120, 100);
 
 	while (true) {
     	int power = mainController.get_analog(ANALOG_LEFT_Y);
@@ -56,7 +57,7 @@ void opcontrol() {
 
 		if (mainController.get_digital_new_press(DIGITAL_R1))
 		{
-			cata_motors.move_relative(360, 100);
+			cata_motors.move_relative(362, 100);
 		}
 
 		if (mainController.get_digital_new_press(DIGITAL_X))
@@ -106,7 +107,7 @@ void opcontrol() {
 		}
 		
 		//Gif gif("/usd/mygif.gif", lv_scr_act());
-
+		printf("Angle: %ld \n", cata_rotation_sensor.get_angle()/100);
 	    pros::c::delay(2);
 	}
 }
