@@ -35,7 +35,7 @@ void opcontrol() {
 	pros::Motor_Group left_drive_motors ({left_motor_1, left_motor_2});
 	pros::Motor_Group right_drive_motors ({right_motor_1, right_motor_2});
 
-	pros::Motor cata_motor (5, pros::E_MOTOR_GEARSET_36, true, pros::E_MOTOR_ENCODER_DEGREES);
+	pros::Motor cata_motor (5, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
 	//pros::Motor cata_motor_2 (6, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
 	//pros::Motor_Group cata_motors ({cata_motor_1, cata_motor_2});
 	pros::Rotation cata_rotation_sensor (6);
