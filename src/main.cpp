@@ -18,6 +18,7 @@ void competition_initialize() {}
  */
 void autonomous() {}
 
+
 /**
  * If no competition control is connected, this function will run immediately
  * following--ignore-fail-on-non-empty initialize().
@@ -58,14 +59,12 @@ void opcontrol() {
 
 		if (mainController.get_digital_new_press(DIGITAL_R1))
 		{
-			pros::Task task{[=] {
 			cata_motor.move(127);
-				while (cata_rotation_sensor.get_position() > 0)
-				{
-					pros::c::delay(2);
-				}
-				cata_motor.move(0);
-			}};
+			while (cata_rotation_sensor.get_position() > 0)
+			{
+				pros::c::delay(2);
+			}
+			cata_motor.move(0);
 		}
 
 		if (mainController.get_digital_new_press(DIGITAL_X))
