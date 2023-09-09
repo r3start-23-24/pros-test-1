@@ -35,9 +35,9 @@ void opcontrol() {
 	pros::Motor_Group left_drive_motors ({left_motor_1, left_motor_2});
 	pros::Motor_Group right_drive_motors ({right_motor_1, right_motor_2});
 
-	pros::Motor cata_motor_1 (5, pros::E_MOTOR_GEARSET_36, true, pros::E_MOTOR_ENCODER_DEGREES);
-	pros::Motor cata_motor_2 (6, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
-	pros::Motor_Group cata_motors ({cata_motor_1, cata_motor_2});
+	pros::Motor cata_motor (5, pros::E_MOTOR_GEARSET_36, true, pros::E_MOTOR_ENCODER_DEGREES);
+	//pros::Motor cata_motor_2 (6, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
+	//pros::Motor_Group cata_motors ({cata_motor_1, cata_motor_2});
 	pros::Rotation cata_rotation_sensor (6);
 
 	pros::Motor intake_motor_1 (4, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
@@ -45,7 +45,7 @@ void opcontrol() {
 	pros::Motor_Group intake_motors ({intake_motor_1, intake_motor_2});
 	intake_motors.set_brake_modes(MOTOR_BRAKE_BRAKE);
 
-	cata_motors.move_relative(120, 100);
+	cata_motor.move_relative(120, 100);
 	cata_rotation_sensor.set_position(0);
 
 	while (true) {
@@ -58,12 +58,14 @@ void opcontrol() {
 
 		if (mainController.get_digital_new_press(DIGITAL_R1))
 		{
-			cata_motors.move(127);
-			while (cata_rotation_sensor.get_position() > 0)
-			{
-				pros::c::delay(2);
-			}
-			cata_motors.move(0);
+			pros::Task task{[=] {
+			cata_motor.move(127);
+				while (cata_rotation_sensor.get_position() > 0)
+				{
+					pros::c::delay(2);
+				}
+				cata_motor.move(0);
+			}};
 		}
 
 		if (mainController.get_digital_new_press(DIGITAL_X))
