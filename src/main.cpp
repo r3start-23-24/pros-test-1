@@ -115,7 +115,7 @@ void opcontrol() {
 		}
 		
 		//Gif gif("/usd/mygif.gif", lv_scr_act());
-		printf("%f", cata_limit_switch.get_value());
+		printf("%f\n", cata_limit_switch.get_value());
 	    pros::c::delay(5);
 	}
 }
