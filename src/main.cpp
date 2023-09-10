@@ -48,6 +48,7 @@ void opcontrol() {
 	cata_motor.move_relative(145, 100);
 
 	while (true) {
+		bool first_time = true;
     	int power = mainController.get_analog(ANALOG_LEFT_Y);
 	    int turn = mainController.get_analog(ANALOG_RIGHT_X);
 	    int left = power + turn;
@@ -57,9 +58,13 @@ void opcontrol() {
 
 		if (mainController.get_digital_new_press(DIGITAL_R1))
 		{
-			cata_rotation_sensor.set_position(0);
+			if (first_time)
+			{
+				cata_rotation_sensor.set_position(0);
+				first_time = false;
+			}
 			cata_motor.move_velocity(100);
-			while (cata_rotation_sensor.get_angle() > 100)
+			while (cata_rotation_sensor.get_angle() > 200)
 			{
 				pros::c::delay(2);
 				printf("%d\n", cata_rotation_sensor.get_angle());
