@@ -38,6 +38,7 @@ void opcontrol() {
 	//pros::Motor cata_motor_2 (6, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
 	//pros::Motor_Group cata_motors ({cata_motor_1, cata_motor_2});
 	pros::ADIAnalogIn cata_limit_switch('A');
+	cata_limit_switch.calibrate();
 	cata_motor.set_brake_mode(MOTOR_BRAKE_HOLD);
 
 	pros::Motor intake_motor_1 (4, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
@@ -46,7 +47,7 @@ void opcontrol() {
 	intake_motors.set_brake_modes(MOTOR_BRAKE_BRAKE);
 
 	cata_motor.move(127);
-	while (cata_limit_switch.get_value() > 25)
+	while (cata_limit_switch.get_value_calibrated() > 25)
 	{
 		pros::c::delay(2); 
 	}
@@ -62,12 +63,14 @@ void opcontrol() {
 
 		if (mainController.get_digital_new_press(DIGITAL_R1))
 		{
-			if (cata_limit_switch.get_value() < 25)
-			{
-				cata_motor.move_relative(100, 100);
-			}
+			// off bumper 28
+			// on bumper 10
 			cata_motor.move(127);
-			while (cata_limit_switch.get_value() > 25)
+			while (cata_limit_switch.get_value_calibrated() < 25)
+			{
+				pros::c::delay(2);
+			}
+			while (cata_limit_switch.get_value_calibrated() > 25)
 			{
 				pros::c::delay(2); 
 			}
@@ -120,7 +123,7 @@ void opcontrol() {
 		}
 		
 		//Gif gif("/usd/mygif.gif", lv_scr_act());
-		printf("%f\n", cata_limit_switch.get_value());
+		printf("%d\n", cata_limit_switch.get_value());
 	    pros::c::delay(5);
 	}
 }
