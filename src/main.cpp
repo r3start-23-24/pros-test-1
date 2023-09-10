@@ -38,14 +38,25 @@ void opcontrol() {
 	cata_motor.set_brake_mode(MOTOR_BRAKE_HOLD);
 	//pros::Motor cata_motor_2 (6, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
 	//pros::Motor_Group cata_motors ({cata_motor_1, cata_motor_2});
-	pros::Rotation cata_rotation_sensor(5);
+	pros::ADIAnalogIn cata_limit_switch('A');
+	cata_limit_switch.calibrate();
+	cata_motor.set_brake_mode(MOTOR_BRAKE_HOLD);
 
 	pros::Motor intake_motor_1 (4, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 	pros::Motor intake_motor_2 (7, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
 	pros::Motor_Group intake_motors ({intake_motor_1, intake_motor_2});
 	intake_motors.set_brake_modes(MOTOR_BRAKE_BRAKE);
 
-	cata_motor.move_relative(145, 100);
+	cata_motor.move(127);
+	while (cata_limit_switch.get_value_calibrated() < 25)
+	{
+		pros::c::delay(2);
+	}
+	while (cata_limit_switch.get_value_calibrated() > 25)
+	{
+		pros::c::delay(2);
+	}
+	cata_motor.brake();
 
 	while (true) {
 		bool first_time = true;
@@ -58,16 +69,16 @@ void opcontrol() {
 
 		if (mainController.get_digital_new_press(DIGITAL_R1))
 		{
-			if (first_time)
-			{
-				cata_rotation_sensor.set_position(0);
-				first_time = false;
-			}
-			cata_motor.move_velocity(100);
-			while (cata_rotation_sensor.get_angle() > 200)
+			// off bumper 28
+			// on bumper 10
+			cata_motor.move(127);
+			while (cata_limit_switch.get_value_calibrated() < 25)
 			{
 				pros::c::delay(2);
-				printf("%d\n", cata_rotation_sensor.get_angle());
+			}
+			while (cata_limit_switch.get_value_calibrated() > 25)
+			{
+				pros::c::delay(2);
 			}
 			cata_motor.brake();
 		}
@@ -117,7 +128,7 @@ void opcontrol() {
 		}
 		
 		//Gif gif("/usd/mygif.gif", lv_scr_act());
-		printf("%d\n", cata_rotation_sensor.get_angle());
+		printf("%d\n", cata_limit_switch.get_value());
 	    pros::c::delay(5);
 	}
 }
