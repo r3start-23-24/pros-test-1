@@ -48,9 +48,9 @@ void opcontrol() {
 	cata_motor.move(127);
 	while (cata_limit_switch.get_value() > 25)
 	{
-		pros::c::delay(2);
+		pros::c::delay(2); 
 	}
-	cata_motor.move(0);
+	cata_motor.brake();
 
 	while (true) {
     	int power = mainController.get_analog(ANALOG_LEFT_Y);
@@ -62,12 +62,17 @@ void opcontrol() {
 
 		if (mainController.get_digital_new_press(DIGITAL_R1))
 		{
+			if (cata_limit_switch.get_value() < 25)
+			{
+				cata_motor.move_relative(100, 100);
+			}
 			cata_motor.move(127);
 			while (cata_limit_switch.get_value() > 25)
 			{
 				pros::c::delay(2); 
 			}
-			cata_motor.move(0);
+			pros::c::delay(50);
+			cata_motor.brake();
 		}
 
 		if (mainController.get_digital_new_press(DIGITAL_X))
