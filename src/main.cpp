@@ -2,9 +2,7 @@
 #include "gif-pros/gifclass.hpp"
 //#include "lvgl.h"
 
-void initialize() {
-	//LV_IMG_DECLARE(DillyPic);
-}
+void initialize() {}
 
 // for when robot is disabled
 void disabled() {}
@@ -36,18 +34,23 @@ void opcontrol() {
 	pros::Motor_Group left_drive_motors ({left_motor_1, left_motor_2});
 	pros::Motor_Group right_drive_motors ({right_motor_1, right_motor_2});
 
-	pros::Motor cata_motor (5, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
+	pros::Motor cata_motor (6, pros::E_MOTOR_GEARSET_36, true, pros::E_MOTOR_ENCODER_DEGREES);
 	//pros::Motor cata_motor_2 (6, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
 	//pros::Motor_Group cata_motors ({cata_motor_1, cata_motor_2});
-	pros::Rotation cata_rotation_sensor (6);
+	pros::ADIAnalogIn cata_limit_switch('A');
+	cata_motor.set_brake_mode(MOTOR_BRAKE_HOLD);
 
 	pros::Motor intake_motor_1 (4, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 	pros::Motor intake_motor_2 (7, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
 	pros::Motor_Group intake_motors ({intake_motor_1, intake_motor_2});
 	intake_motors.set_brake_modes(MOTOR_BRAKE_BRAKE);
 
-	cata_motor.move_relative(120, 100);
-	cata_rotation_sensor.set_position(0);
+	cata_motor.move(127);
+	while (cata_limit_switch.get_value() > 25)
+	{
+		pros::c::delay(2);
+	}
+	cata_motor.move(0);
 
 	while (true) {
     	int power = mainController.get_analog(ANALOG_LEFT_Y);
@@ -60,9 +63,9 @@ void opcontrol() {
 		if (mainController.get_digital_new_press(DIGITAL_R1))
 		{
 			cata_motor.move(127);
-			while (cata_rotation_sensor.get_position() > 0)
+			while (cata_limit_switch.get_value() > 25)
 			{
-				pros::c::delay(2);
+				pros::c::delay(2); 
 			}
 			cata_motor.move(0);
 		}
@@ -109,12 +112,10 @@ void opcontrol() {
 		else if (!(intakeOn || intakeOnReversed))
 		{
 			intake_motors.move(0);
-			//intakeOn = false;
-			//intakeOnReversed = false;
 		}
 		
 		//Gif gif("/usd/mygif.gif", lv_scr_act());
-		printf("Angle: %ld \n", cata_rotation_sensor.get_angle()/100);
-	    pros::c::delay(2);
+		printf("%f", cata_limit_switch.get_value);
+	    pros::c::delay(5);
 	}
 }
