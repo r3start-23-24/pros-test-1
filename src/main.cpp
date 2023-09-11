@@ -97,10 +97,12 @@ void opcontrol() {
 			if (on)
 			{
 				cata_motor.brake();
+				on = false;
 			}
 			else
 			{
 				cata_motor.move(127);
+				on = true;
 			}
 		}
 
