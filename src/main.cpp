@@ -1,13 +1,47 @@
 #include "main.h"
 #include "gif-pros/gifclass.hpp"
+#include "pros/rtos.h"
+#include "pros/rtos.hpp"
 #include "robot.hpp"
 //#include "lvgl.h"
 
-void initialize() {
+void cata_thread()
+{
+	// off bumper 28
+	// on bumper 10
+	if (mainController.get_digital_new_press(DIGITAL_R1))
+	{
+		cata_motor.move(127);
+		while (cata_limit_switch.get_value_calibrated() < 25)
+		{
+			pros::c::delay(2);
+		}
+		while (cata_limit_switch.get_value_calibrated() > 25)
+		{
+			pros::c::delay(2);
+		}
+		cata_motor.brake();
+	}
+	if (mainController.get_digital_new_press(DIGITAL_R2))
+	{
+		cata_motor.move(127);
+		while (cata_limit_switch.get_value_calibrated() < 25)
+		{
+			pros::c::delay(2);
+		}
+		pros::c::delay(250);
+		cata_motor.brake();
+	}
+}
+
+void initialize()
+{
 	cata_motor.set_brake_mode(MOTOR_BRAKE_HOLD);
 	cata_limit_switch.calibrate();
 	cata_motor.set_brake_mode(MOTOR_BRAKE_HOLD);
 	intake_motors.set_brake_modes(MOTOR_BRAKE_BRAKE);
+
+	pros::Task cata(cata_thread);
 }
 
 // for when robot is disabled
@@ -27,10 +61,12 @@ void autonomous() {}
  * If no competition control is connected, this function will run immediately
  * following--ignore-fail-on-non-empty initialize().
  */
-void opcontrol() {
+void opcontrol()
+{
 	bool intakeOn = false;
 	bool intakeOnReversed = false;
 
+	pros::c::delay(500);
 	cata_motor.move(127);
 	while (cata_limit_switch.get_value_calibrated() < 25)
 	{
@@ -51,31 +87,6 @@ void opcontrol() {
 	    left_drive_motors.move(left);
 		right_drive_motors.move(right);
 
-		if (mainController.get_digital_new_press(DIGITAL_R1))
-		{
-			// off bumper 28
-			// on bumper 10
-			cata_motor.move(127);
-			while (cata_limit_switch.get_value_calibrated() < 25)
-			{
-				pros::c::delay(2);
-			}
-			while (cata_limit_switch.get_value_calibrated() > 25)
-			{
-				pros::c::delay(2);
-			}
-			cata_motor.brake();
-		}
-		if (mainController.get_digital_new_press(DIGITAL_R2))
-		{
-			cata_motor.move(127);
-			while (cata_limit_switch.get_value_calibrated() < 25)
-			{
-				pros::c::delay(2);
-			}
-			pros::c::delay(250);
-			cata_motor.brake();
-		}
 		if (mainController.get_digital_new_press(DIGITAL_UP))
 		{
 			if (on)
