@@ -59,11 +59,11 @@ void opcontrol() {
 	cata_motor.brake();
 
 	while (true) {
-		bool first_time = true;
+		bool on = false;
     	int power = mainController.get_analog(ANALOG_LEFT_Y);
 	    int turn = mainController.get_analog(ANALOG_RIGHT_X);
-	    int left = -(power) + turn;
-	    int right = -(power) - turn;
+	    int left = power + turn;
+	    int right = power - turn;
 	    left_drive_motors.move(left);
 		right_drive_motors.move(right);
 
@@ -91,6 +91,17 @@ void opcontrol() {
 			}
 			pros::c::delay(250);
 			cata_motor.brake();
+		}
+		if (mainController.get_digital_new_press(DIGITAL_UP))
+		{
+			if (on)
+			{
+				cata_motor.brake();
+			}
+			else
+			{
+				cata_motor.move(127);
+			}
 		}
 
 		if (mainController.get_digital_new_press(DIGITAL_X))
