@@ -1,5 +1,6 @@
 #include "main.h"
 #include "gif-pros/gifclass.hpp"
+#include "robot.hpp"
 //#include "lvgl.h"
 
 void initialize() {}
@@ -101,7 +102,7 @@ void opcontrol() {
 			}
 			else
 			{
-				cata_motor.move(127);
+				cata_motor.move_velocity(70);
 				on = true;
 			}
 		}
