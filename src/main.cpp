@@ -35,6 +35,26 @@ void cata_thread()
 		}
 	}
 }
+void cata_toggle_thread()
+{
+	bool on = false;
+	while (true)
+	{
+		if (mainController.get_digital_new_press(DIGITAL_UP))
+		{
+			if (on)
+			{
+				cata_motor.brake();
+				on = false;
+			}
+			else
+			{
+				cata_motor.move_velocity(70);
+				on = true;
+			}
+		}
+	}
+}
 void gifthread()
 {
 	while (true)
@@ -59,6 +79,7 @@ void initialize()
 	intake_motors.set_brake_modes(MOTOR_BRAKE_BRAKE);
 
 	pros::Task cata(cata_thread);
+	pros::Task cata_toggle(cata_toggle_thread);
 	pros::Task gifs(gifthread);
 }
 
@@ -104,20 +125,6 @@ void opcontrol()
 	    int right = power - turn;
 	    left_drive_motors.move(left);
 		right_drive_motors.move(right);
-
-		if (mainController.get_digital_new_press(DIGITAL_UP))
-		{
-			if (on)
-			{
-				cata_motor.brake();
-				on = false;
-			}
-			else
-			{
-				cata_motor.move_velocity(70);
-				on = true;
-			}
-		}
 
 		if (mainController.get_digital_new_press(DIGITAL_X))
 		{
