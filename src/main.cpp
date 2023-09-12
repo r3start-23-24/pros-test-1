@@ -39,10 +39,10 @@ void gifthread()
 		Gif gif1("/usd/gif1.gif", lv_scr_act());
 		pros::c::delay(10000);
 		gif1.clean();
-		Gif gif2("/usd/gif1.gif", lv_scr_act());
+		Gif gif2("/usd/gif2.gif", lv_scr_act());
 		pros::c::delay(10000);
 		gif2.clean();
-		Gif gif3("/usd/gif1.gif", lv_scr_act());
+		Gif gif3("/usd/gif3.gif", lv_scr_act());
 		pros::c::delay(10000);
 		gif3.clean();
 	}
