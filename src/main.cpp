@@ -8,28 +8,31 @@ void cata_thread()
 {
 	// off bumper 28
 	// on bumper 10
-	if (mainController.get_digital_new_press(DIGITAL_R1))
+	while (true)
 	{
-		cata_motor.move(127);
-		while (cata_limit_switch.get_value_calibrated() < 25)
+		if (mainController.get_digital_new_press(DIGITAL_R1))
 		{
-			pros::c::delay(2);
+			cata_motor.move(127);
+			while (cata_limit_switch.get_value_calibrated() < 25)
+			{
+				pros::c::delay(2);
+			}
+			while (cata_limit_switch.get_value_calibrated() > 25)
+			{
+				pros::c::delay(2);
+			}
+			cata_motor.brake();
 		}
-		while (cata_limit_switch.get_value_calibrated() > 25)
+		if (mainController.get_digital_new_press(DIGITAL_R2))
 		{
-			pros::c::delay(2);
+			cata_motor.move(127);
+			while (cata_limit_switch.get_value_calibrated() < 25)
+			{
+				pros::c::delay(2);
+			}
+			pros::c::delay(250);
+			cata_motor.brake();
 		}
-		cata_motor.brake();
-	}
-	if (mainController.get_digital_new_press(DIGITAL_R2))
-	{
-		cata_motor.move(127);
-		while (cata_limit_switch.get_value_calibrated() < 25)
-		{
-			pros::c::delay(2);
-		}
-		pros::c::delay(250);
-		cata_motor.brake();
 	}
 }
 void gifthread()
@@ -39,10 +42,10 @@ void gifthread()
 		Gif gif1("/usd/gif1.gif", lv_scr_act());
 		pros::c::delay(10000);
 		gif1.clean();
-		Gif gif2("/usd/gif1.gif", lv_scr_act());
+		Gif gif2("/usd/gif2.gif", lv_scr_act());
 		pros::c::delay(10000);
 		gif2.clean();
-		Gif gif3("/usd/gif1.gif", lv_scr_act());
+		Gif gif3("/usd/gif3.gif", lv_scr_act());
 		pros::c::delay(10000);
 		gif3.clean();
 	}
