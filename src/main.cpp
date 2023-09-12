@@ -3,7 +3,6 @@
 #include "pros/rtos.h"
 #include "pros/rtos.hpp"
 #include "robot.hpp"
-//#include "lvgl.h"
 
 void cata_thread()
 {
@@ -33,6 +32,21 @@ void cata_thread()
 		cata_motor.brake();
 	}
 }
+void gifthread()
+{
+	while (true)
+	{
+		Gif gif1("/usd/gif1.gif", lv_scr_act());
+		pros::c::delay(10000);
+		gif1.clean();
+		Gif gif2("/usd/gif1.gif", lv_scr_act());
+		pros::c::delay(10000);
+		gif2.clean();
+		Gif gif3("/usd/gif1.gif", lv_scr_act());
+		pros::c::delay(10000);
+		gif3.clean();
+	}
+}
 
 void initialize()
 {
@@ -42,6 +56,7 @@ void initialize()
 	intake_motors.set_brake_modes(MOTOR_BRAKE_BRAKE);
 
 	pros::Task cata(cata_thread);
+	pros::Task gifs(gifthread);
 }
 
 // for when robot is disabled
@@ -145,7 +160,6 @@ void opcontrol()
 			intake_motors.move(0);
 		}
 		
-		//Gif gif("/usd/mygif.gif", lv_scr_act());
 		printf("%d\n", cata_limit_switch.get_value());
 	    pros::c::delay(5);
 	}
