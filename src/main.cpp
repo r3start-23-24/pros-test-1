@@ -110,7 +110,11 @@ void opcontrol() {
 	while (true) {
 		bool on = false;
     	int power = mainController.get_analog(ANALOG_LEFT_Y);
-	    int turn = pow(2, (log(101)/100*log(2)) * mainController.get_analog(ANALOG_RIGHT_X)) - 1;
+	    int turn = pow(2, (log(128)/(127*log(2))) * abs(mainController.get_analog(ANALOG_RIGHT_X))) - 1;
+		if (mainController.get_analog(ANALOG_RIGHT_X) < 0)
+		{
+			turn *= -1;
+		}
 	    int left = power + turn;
 	    int right = power - turn;
 	    left_drive_motors.move(left);
