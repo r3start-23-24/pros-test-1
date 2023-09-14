@@ -13,7 +13,7 @@ void cata_thread() {
 
 		if (mainController.get_digital_new_press(DIGITAL_R1))
 		{
-			cata_motors.move(127);
+			cata_motors.move_velocity(70);
 			while (cata_limit_switch.get_value_calibrated() < 25)
 			{
 				pros::c::delay(2);
@@ -26,7 +26,7 @@ void cata_thread() {
 		}
 		if (mainController.get_digital_new_press(DIGITAL_R2))
 		{
-			cata_motors.move(127);
+			cata_motors.move_velocity(70);
 			while (cata_limit_switch.get_value_calibrated() < 25)
 			{
 				pros::c::delay(2);
@@ -38,6 +38,7 @@ void cata_thread() {
 		{
 			if (on)
 			{
+				cata_motors.move_velocity(0);
 				cata_motors.brake();
 				on = false;
 			}
@@ -75,22 +76,13 @@ void initialize() {
 	pros::Task gifs(gifthread);
 }
 
-// for when robot is disabled
 void disabled() {}
 
 // pre-auton (eg auton selector)
 void competition_initialize() {}
 
-/**
- * This function may be called in initialize or opcontrol
- * for non-competition testing purposes.
- */
 void autonomous() {}
 
-/**
- * If no competition control is connected, this function will run immediately
- * following--ignore-fail-on-non-empty initialize().
- */
 void opcontrol() {
 	bool intakeOn = false;
 	bool intakeOnReversed = false;
@@ -110,7 +102,11 @@ void opcontrol() {
 	while (true) {
 		bool on = false;
     	int power = mainController.get_analog(ANALOG_LEFT_Y);
-	    int turn = pow(2, (log(128)/(127*log(2))) * abs(mainController.get_analog(ANALOG_RIGHT_X))) - 1;
+	    int turn = pow(2, (log(108)/(127*log(2))) * abs(mainController.get_analog(ANALOG_RIGHT_X))) + 19;
+		if (mainController.get_analog(ANALOG_RIGHT_X) < 2 && mainController.get_analog(ANALOG_RIGHT_X) > -2)
+		{
+			turn = 0;
+		}
 		if (mainController.get_analog(ANALOG_RIGHT_X) < 0)
 		{
 			turn *= -1;
