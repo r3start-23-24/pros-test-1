@@ -10,9 +10,11 @@ void cata_thread()
 	// on bumper 10
 	while (true)
 	{
+		bool on = false;
+
 		if (mainController.get_digital_new_press(DIGITAL_R1))
 		{
-			cata_motor.move(127);
+			cata_motors.move(127);
 			while (cata_limit_switch.get_value_calibrated() < 25)
 			{
 				pros::c::delay(2);
@@ -21,38 +23,32 @@ void cata_thread()
 			{
 				pros::c::delay(2);
 			}
-			cata_motor.brake();
+			cata_motors.brake();
 		}
 		if (mainController.get_digital_new_press(DIGITAL_R2))
 		{
-			cata_motor.move(127);
+			cata_motors.move(127);
 			while (cata_limit_switch.get_value_calibrated() < 25)
 			{
 				pros::c::delay(2);
 			}
 			pros::c::delay(250);
-			cata_motor.brake();
+			cata_motors.brake();
 		}
-	}
-}
-void cata_toggle_thread()
-{
-	bool on = false;
-	while (true)
-	{
 		if (mainController.get_digital_new_press(DIGITAL_UP))
 		{
 			if (on)
 			{
-				cata_motor.brake();
+				cata_motors.brake();
 				on = false;
 			}
 			else
 			{
-				cata_motor.move_velocity(70);
+				cata_motors.move_velocity(70);
 				on = true;
 			}
 		}
+		pros::c::delay(2);
 	}
 }
 void gifthread()
@@ -73,13 +69,12 @@ void gifthread()
 
 void initialize()
 {
-	cata_motor.set_brake_mode(MOTOR_BRAKE_HOLD);
+	cata_motors.set_brake_modes(MOTOR_BRAKE_HOLD);
 	cata_limit_switch.calibrate();
-	cata_motor.set_brake_mode(MOTOR_BRAKE_HOLD);
+	cata_motors.set_brake_modes(MOTOR_BRAKE_HOLD);
 	intake_motors.set_brake_modes(MOTOR_BRAKE_BRAKE);
 
 	pros::Task cata(cata_thread);
-	pros::Task cata_toggle(cata_toggle_thread);
 	pros::Task gifs(gifthread);
 }
 
@@ -106,7 +101,7 @@ void opcontrol()
 	bool intakeOnReversed = false;
 
 	pros::c::delay(500);
-	cata_motor.move(127);
+	cata_motors.move(127);
 	while (cata_limit_switch.get_value_calibrated() < 25)
 	{
 		pros::c::delay(2);
@@ -115,7 +110,7 @@ void opcontrol()
 	{
 		pros::c::delay(2);
 	}
-	cata_motor.brake();
+	cata_motors.brake();
 
 	while (true) {
 		bool on = false;
