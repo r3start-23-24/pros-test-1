@@ -12,7 +12,9 @@ extern pros::Motor right_motor_2;
 extern pros::Motor_Group left_drive_motors;
 extern pros::Motor_Group right_drive_motors;
 
-extern pros::Motor cata_motor;
+extern pros::Motor cata_motor_1;
+extern pros::Motor cata_motor_2;
+extern pros::Motor_Group cata_motors;
 extern pros::ADIAnalogIn cata_limit_switch;
 
 extern pros::Motor intake_motor_1;
