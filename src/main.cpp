@@ -4,8 +4,7 @@
 #include "pros/rtos.hpp"
 #include "robot.hpp"
 
-void cata_thread()
-{
+void cata_thread() {
 	// off bumper 28
 	// on bumper 10
 	while (true)
@@ -51,8 +50,7 @@ void cata_thread()
 		pros::c::delay(2);
 	}
 }
-void gifthread()
-{
+void gifthread() {
 	while (true)
 	{
 		Gif gif1("/usd/gif1.gif", lv_scr_act());
@@ -67,8 +65,7 @@ void gifthread()
 	}
 }
 
-void initialize()
-{
+void initialize() {
 	cata_motors.set_brake_modes(MOTOR_BRAKE_HOLD);
 	cata_limit_switch.calibrate();
 	cata_motors.set_brake_modes(MOTOR_BRAKE_HOLD);
@@ -90,13 +87,11 @@ void competition_initialize() {}
  */
 void autonomous() {}
 
-
 /**
  * If no competition control is connected, this function will run immediately
  * following--ignore-fail-on-non-empty initialize().
  */
-void opcontrol()
-{
+void opcontrol() {
 	bool intakeOn = false;
 	bool intakeOnReversed = false;
 
@@ -115,7 +110,7 @@ void opcontrol()
 	while (true) {
 		bool on = false;
     	int power = mainController.get_analog(ANALOG_LEFT_Y);
-	    int turn = mainController.get_analog(ANALOG_RIGHT_X);
+	    int turn = pow(2, (log(101)/100*log(2)) * mainController.get_analog(ANALOG_RIGHT_X)) - 1;
 	    int left = power + turn;
 	    int right = power - turn;
 	    left_drive_motors.move(left);
