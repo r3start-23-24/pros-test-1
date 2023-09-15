@@ -44,7 +44,7 @@ void cata_thread() {
 			}
 			else
 			{
-				cata_motors.move_velocity(70);
+				cata_motors.move_velocity(55);
 				on = true;
 			}
 		}
@@ -115,6 +115,11 @@ void opcontrol() {
 	    int right = power - turn;
 	    left_drive_motors.move(left);
 		right_drive_motors.move(right);
+
+		if (mainController.get_digital_new_press(DIGITAL_DOWN))
+		{
+			cata_motors.move_relative(-100, 100);
+		}
 
 		if (mainController.get_digital_new_press(DIGITAL_X))
 		{
