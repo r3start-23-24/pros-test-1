@@ -10,7 +10,6 @@ void cata_thread() {
 	while (true)
 	{
 		bool on = false;
-
 		if (mainController.get_digital_new_press(DIGITAL_R1))
 		{
 			cata_motors.move_velocity(70);
@@ -18,6 +17,7 @@ void cata_thread() {
 			{
 				pros::c::delay(2);
 			}
+			pros::c::delay(200);
 			while (cata_limit_switch.get_value_calibrated() > 25)
 			{
 				pros::c::delay(2);
