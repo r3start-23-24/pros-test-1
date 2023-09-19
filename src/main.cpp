@@ -81,7 +81,11 @@ void disabled() {}
 // pre-auton (eg auton selector)
 void competition_initialize() {}
 
-void autonomous() {}
+void autonomous() {
+	const int oneTile = 1800;
+	left_drive_motors.move_relative(oneTile, 200);
+	right_drive_motors.move_relative(oneTile, 200);
+}
 
 void opcontrol() {
 	bool intakeOn = false;
