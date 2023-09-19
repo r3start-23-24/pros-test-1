@@ -83,22 +83,9 @@ void competition_initialize() {}
 
 void autonomous() {
 	const int oneTile = 1600;
-	for (int i = 0; i < 8; i++)
-	{
-		left_drive_motors.move_relative(oneTile, 300);
-		right_drive_motors.move_relative(oneTile, 300);
-		pros::c::delay(100);
-		while (left_motor_1.get_actual_velocity() != 0)
-		{
-			pros::c::delay(5);
-		}
-		left_drive_motors.move_relative(-oneTile, 300);
-		right_drive_motors.move_relative(-oneTile, 300);
-		while (left_motor_1.get_actual_velocity() != 0)
-		{
-			pros::c::delay(5);
-		}
-	}
+	
+	left_drive_motors.move_relative(550, 300);
+	right_drive_motors.move_relative(-550, 300);
 }
 
 void opcontrol() {
