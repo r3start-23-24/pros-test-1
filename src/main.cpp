@@ -65,6 +65,41 @@ void gifthread() {
 		gif3.clean();
 	}
 }
+void moveForward(float tiles, int velocity) {
+	const int oneTile = 1600;
+
+	left_drive_motors.move_relative(tiles * oneTile, velocity);
+	right_drive_motors.move_relative(tiles * oneTile, velocity);
+	pros::c::delay(100);
+	while (left_motor_1.get_actual_velocity() != 0)
+	{
+		pros::c::delay(5);
+	}
+}
+void turnRight(float degrees, int velocity) {
+	const int ninetyTurn = 80;
+	const int oneDegree = 550/90;
+
+	left_drive_motors.move_relative(oneDegree * degrees, velocity);
+	right_drive_motors.move_relative(-(oneDegree * degrees), velocity);
+	pros::c::delay(100);
+	while (left_motor_1.get_actual_velocity() != 0)
+	{
+		pros::c::delay(5);
+	}
+}
+void cata_down() {
+	cata_motors.move(127);
+	while (cata_limit_switch.get_value_calibrated() < 25)
+	{
+		pros::c::delay(2);
+	}
+	while (cata_limit_switch.get_value_calibrated() > 25)
+	{
+		pros::c::delay(2);
+	}
+	cata_motors.brake();
+}
 
 void initialize() {
 	cata_motors.set_brake_modes(MOTOR_BRAKE_HOLD);
@@ -81,11 +116,20 @@ void disabled() {}
 // pre-auton (eg auton selector)
 void competition_initialize() {}
 
+
+
 void autonomous() {
-	const int oneTile = 1600;
-	
-	left_drive_motors.move_relative(550, 300);
-	right_drive_motors.move_relative(-550, 300);
+	moveForward(0.5, 600);
+	moveForward(1.75, 300);
+	turnRight(45, 200);
+	moveForward(-0.3, 200);
+	turnRight(45, 200);
+	moveForward(0.3, 300);
+	intake_motors.move_velocity(-100);
+	moveForward(0.3, 300);
+	moveForward(-0.3, 300);
+	turnRight(190, 200);
+	moveForward(-0.5, 400);
 }
 
 void opcontrol() {
@@ -93,16 +137,7 @@ void opcontrol() {
 	bool intakeOnReversed = false;
 
 	pros::c::delay(500);
-	cata_motors.move(127);
-	while (cata_limit_switch.get_value_calibrated() < 25)
-	{
-		pros::c::delay(2);
-	}
-	while (cata_limit_switch.get_value_calibrated() > 25)
-	{
-		pros::c::delay(2);
-	}
-	cata_motors.brake();
+	cata_down();
 
 	while (true) {
 		bool on = false;
