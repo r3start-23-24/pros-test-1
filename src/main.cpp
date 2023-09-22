@@ -5,6 +5,7 @@
 #include "pros/rtos.h"
 #include "pros/rtos.hpp"
 #include "robot.hpp"
+#include "autoSelect/selection.h"
 
 void cata_thread() {
 	// off bumper 28
@@ -107,6 +108,8 @@ void cata_down() {
 }
 
 void initialize() {
+	selector::init();
+
 	cata_motors.set_brake_modes(MOTOR_BRAKE_HOLD);
 	cata_limit_switch.calibrate();
 	cata_motors.set_brake_modes(MOTOR_BRAKE_HOLD);
@@ -123,22 +126,26 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous() {
-	/*
-	moveForward(0.5, 600);
-	moveForward(1.75, 300);
-	turnRight(45, 200);
-	moveForward(-0.3, 200);
-	turnRight(45, 200);
-	moveForward(0.3, 300);
-	intake_motors.move_velocity(-100);
-	moveForward(0.3, 300);
-	moveForward(-0.3, 300);
-	turnRight(190, 200);
-	moveForward(-0.5, 400);
-	*/
-	moveForward(-0.5, 600);
-	moveForward(0.6, 200);
-	cata_motors.move_velocity(50);
+	if (selector::auton == 1) //red front
+	{
+		moveForward(0.5, 600);
+		moveForward(1.75, 300);
+		turnRight(45, 200);
+		moveForward(-0.3, 200);
+		turnRight(45, 200);
+		moveForward(0.3, 300);
+		intake_motors.move_velocity(-100);
+		moveForward(0.3, 300);
+		moveForward(-0.3, 300);
+		turnRight(190, 200);
+		moveForward(-0.5, 400);
+	}
+	else if (selector::auton == 0) //skills
+	{
+		moveForward(-0.5, 600);
+		moveForward(0.6, 200);
+		cata_motors.move_velocity(50);
+	}
 }
 
 void opcontrol() {
