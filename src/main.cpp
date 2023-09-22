@@ -125,8 +125,8 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous() {
-	if (selector::auton == 1) //red front
-	{
+	//if (selector::auton == 1) //red front
+	//{
 		moveForward(0.5, 600);
 		moveForward(1.75, 300);
 		turnRight(45, 200);
@@ -138,13 +138,13 @@ void autonomous() {
 		moveForward(-0.3, 300);
 		turnRight(190, 200);
 		moveForward(-0.5, 400);
-	}
-	else if (selector::auton == 0) //skills
-	{
+	//}
+	//else if (selector::auton == 0) //skills
+	/*{
 		moveForward(-0.5, 600);
 		moveForward(0.6, 200);
 		cata_motors.move_velocity(50);
-	}
+	}*/
 }
 
 void opcontrol() {
