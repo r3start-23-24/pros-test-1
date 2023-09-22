@@ -152,13 +152,13 @@ void opcontrol() {
 	bool intakeOn = false;
 	bool intakeOnReversed = false;
 
+	bool left_wing_extended = false;
+	bool right_wing_extended = false;
+
 	pros::c::delay(500);
 	cata_down();
 
 	while (true) {
-		bool left_wing_extended = false;
-		bool right_wing_extended = false;
-
     	int power = mainController.get_analog(ANALOG_LEFT_Y);
 	    int turn = pow(2, (log(108)/(127*log(2))) * abs(mainController.get_analog(ANALOG_RIGHT_X))) + 19;
 		if (mainController.get_analog(ANALOG_RIGHT_X) < 2 && mainController.get_analog(ANALOG_RIGHT_X) > -2)
