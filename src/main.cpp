@@ -117,7 +117,6 @@ void initialize() {
 
 	pros::Task cata(cata_thread);
 	pros::Task cata_up(cata_up_thread);
-	pros::Task gifs(gifthread);
 }
 
 void disabled() {}
@@ -149,6 +148,8 @@ void autonomous() {
 }
 
 void opcontrol() {
+	pros::Task gifs(gifthread);
+	
 	bool intakeOn = false;
 	bool intakeOnReversed = false;
 
