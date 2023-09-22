@@ -1,5 +1,7 @@
 #include "main.h"
 #include "gif-pros/gifclass.hpp"
+#include "pros/adi.h"
+#include "pros/misc.h"
 #include "pros/rtos.h"
 #include "pros/rtos.hpp"
 #include "robot.hpp"
@@ -9,7 +11,6 @@ void cata_thread() {
 	// on bumper 10
 	while (true)
 	{
-		bool on = false;
 		if (mainController.get_digital_new_press(DIGITAL_R1))
 		{
 			cata_motors.move_velocity(70);
@@ -34,21 +35,25 @@ void cata_thread() {
 			pros::c::delay(250);
 			cata_motors.brake();
 		}
-		if (mainController.get_digital_new_press(DIGITAL_UP))
-		{
-			if (on)
-			{
-				cata_motors.move_velocity(0);
-				cata_motors.brake();
-				on = false;
-			}
-			else
-			{
-				cata_motors.move_velocity(55);
-				on = true;
-			}
-		}
 		pros::c::delay(2);
+	}
+}
+void cata_up_thread() {
+	bool on = false;
+	if (mainController.get_digital_new_press(DIGITAL_UP))
+	{
+		//cata_motors.brake();
+		if (on)
+		{
+			cata_motors.move_velocity(0);
+			cata_motors.brake();
+			on = false;
+		}
+		else
+		{
+			cata_motors.move_velocity(55);
+			on = true;
+		}
 	}
 }
 void gifthread() {
@@ -108,6 +113,7 @@ void initialize() {
 	intake_motors.set_brake_modes(MOTOR_BRAKE_BRAKE);
 
 	pros::Task cata(cata_thread);
+	pros::Task cata_up(cata_up_thread);
 	pros::Task gifs(gifthread);
 }
 
@@ -115,8 +121,6 @@ void disabled() {}
 
 // pre-auton (eg auton selector)
 void competition_initialize() {}
-
-
 
 void autonomous() {
 	/*
@@ -145,7 +149,9 @@ void opcontrol() {
 	cata_down();
 
 	while (true) {
-		bool on = false;
+		bool left_wing_extended = false;
+		bool right_wing_extended = false;
+
     	int power = mainController.get_analog(ANALOG_LEFT_Y);
 	    int turn = pow(2, (log(108)/(127*log(2))) * abs(mainController.get_analog(ANALOG_RIGHT_X))) + 19;
 		if (mainController.get_analog(ANALOG_RIGHT_X) < 2 && mainController.get_analog(ANALOG_RIGHT_X) > -2)
@@ -208,6 +214,33 @@ void opcontrol() {
 		else if (!(intakeOn || intakeOnReversed))
 		{
 			intake_motors.move(0);
+		}
+
+		if (mainController.get_digital_new_press(DIGITAL_LEFT))
+		{
+			if (left_wing_extended)
+			{
+				left_wing.set_value(false);
+				left_wing_extended = false;
+			}
+			else
+			{
+				left_wing.set_value(true);
+				left_wing_extended = true;
+			}
+		}
+		else if (mainController.get_digital_new_press(DIGITAL_RIGHT))
+		{
+			if (right_wing_extended)
+			{
+				right_wing.set_value(false);
+				right_wing_extended = false;
+			}
+			else
+			{
+				right_wing.set_value(true);
+				right_wing_extended = true;
+			}
 		}
 		
 		printf("%d\n", cata_limit_switch.get_value());
