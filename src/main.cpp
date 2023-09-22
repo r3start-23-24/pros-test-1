@@ -148,7 +148,7 @@ void autonomous() {
 }
 
 void opcontrol() {
-	//pros::Task gifs(gifthread);
+	pros::Task gifs(gifthread);
 
 	bool intakeOn = false;
 	bool intakeOnReversed = false;
