@@ -9,7 +9,6 @@ void cata_thread() {
 	// on bumper 10
 	while (true)
 	{
-		bool on = false;
 		if (mainController.get_digital_new_press(DIGITAL_R1))
 		{
 			cata_motors.move_velocity(70);
@@ -34,6 +33,13 @@ void cata_thread() {
 			pros::c::delay(250);
 			cata_motors.brake();
 		}
+		pros::c::delay(2);
+	}
+}
+void up_button_thread() {
+	bool on = false;
+	while (true)
+	{
 		if (mainController.get_digital_new_press(DIGITAL_UP))
 		{
 			if (on)
@@ -108,6 +114,7 @@ void initialize() {
 	intake_motors.set_brake_modes(MOTOR_BRAKE_BRAKE);
 
 	pros::Task cata(cata_thread);
+	pros::Task cata_two(up_button_thread);
 	pros::Task gifs(gifthread);
 }
 
@@ -115,8 +122,6 @@ void disabled() {}
 
 // pre-auton (eg auton selector)
 void competition_initialize() {}
-
-
 
 void autonomous() {
 	moveForward(0.5, 600);
