@@ -137,11 +137,23 @@ void autonomous() {
 		moveForward(-0.3, 200);
 		turnRight(45, 200);
 		moveForward(0.3, 300);
-		intake_motors.move_velocity(-100);
+		intake_motors.move_velocity(-600);
 		moveForward(0.3, 300);
 		moveForward(-0.3, 300);
-		turnRight(190, 200);
+		turnRight(200, 200);
 		moveForward(-0.5, 400);
+		moveForward(0.5, 300);
+		turnRight(-30, 300);
+		intake_motors.move_velocity(600);
+		moveForward(1, 400);
+		pros::c::delay(500);
+		moveForward(-0.2, 400);
+		turnRight(-225, 300);
+		moveForward(0.8, 300);
+		intake_motors.move_velocity(-600);
+		turnRight(30, 300);
+		moveForward(0.3, 400);
+		moveForward(-0.5, 500);
 	}
 	else if (selector::auton == 0) //skills
 	{
@@ -161,7 +173,7 @@ void opcontrol() {
 	bool right_wing_extended = false;
 
 	pros::c::delay(500);
-	cata_down();
+	//cata_down();
 
 	while (true) {
     	int power = mainController.get_analog(ANALOG_LEFT_Y);
