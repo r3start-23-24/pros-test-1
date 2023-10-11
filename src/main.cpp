@@ -23,12 +23,12 @@ void cata_thread() {
 			if (pressingR1)
 			{
 				pressingR1 = false;
-				while (cata_limit_switch.get_value_calibrated() < 25)
+				while (cata_limit_switch.get_value_calibrated() < 25 || mainController.get_digital_new_press(DIGITAL_DOWN))
 				{
 					pros::c::delay(2);
 				}
 				pros::c::delay(200);
-				while (cata_limit_switch.get_value_calibrated() > 25)
+				while (cata_limit_switch.get_value_calibrated() > 25 || mainController.get_digital_new_press(DIGITAL_DOWN))
 				{
 					pros::c::delay(2);
 				}
@@ -39,7 +39,7 @@ void cata_thread() {
 		{
 			// cata down
 			cata_motors.move_velocity(70);
-			while (cata_limit_switch.get_value_calibrated() < 25)
+			while (cata_limit_switch.get_value_calibrated() < 25 || mainController.get_digital_new_press(DIGITAL_DOWN))
 			{
 				pros::c::delay(2);
 			}
