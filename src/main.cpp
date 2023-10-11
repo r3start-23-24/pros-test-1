@@ -8,26 +8,36 @@
 #include "autoSelect/selection.h"
 
 void cata_thread() {
+	bool pressingR1 = false;
 	// off bumper 28
 	// on bumper 10
 	while (true)
 	{
-		if (mainController.get_digital_new_press(DIGITAL_R1))
+		if (mainController.get_digital(DIGITAL_R1))
 		{
+			// cata shoot
 			cata_motors.move_velocity(70);
-			while (cata_limit_switch.get_value_calibrated() < 25)
+			pressingR1 = true;
+		}
+		else {
+			if (pressingR1)
 			{
-				pros::c::delay(2);
+				pressingR1 = false;
+				while (cata_limit_switch.get_value_calibrated() < 25)
+				{
+					pros::c::delay(2);
+				}
+				pros::c::delay(200);
+				while (cata_limit_switch.get_value_calibrated() > 25)
+				{
+					pros::c::delay(2);
+				}
+				cata_motors.brake();
 			}
-			pros::c::delay(200);
-			while (cata_limit_switch.get_value_calibrated() > 25)
-			{
-				pros::c::delay(2);
-			}
-			cata_motors.brake();
 		}
 		if (mainController.get_digital_new_press(DIGITAL_R2))
 		{
+			// cata down
 			cata_motors.move_velocity(70);
 			while (cata_limit_switch.get_value_calibrated() < 25)
 			{
@@ -119,7 +129,7 @@ void initialize() {
 	intake_motors.set_brake_modes(MOTOR_BRAKE_BRAKE);
 
 	pros::Task cata(cata_thread);
-	pros::Task cata_two(up_button_thread);
+	//pros::Task cata_two(up_button_thread);
 	pros::Task gifs(gifthread);
 }
 
