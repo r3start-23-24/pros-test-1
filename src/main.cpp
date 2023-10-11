@@ -53,7 +53,7 @@ void up_button_thread() {
 			}
 			else
 			{
-				cata_motors.move_velocity(55);
+				cata_motors.move_velocity(70);
 				on = true;
 			}
 		}
