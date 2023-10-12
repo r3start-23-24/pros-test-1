@@ -139,7 +139,7 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous() {
-	if (selector::auton == 1) //red front
+	/*if (selector::auton == 1) //red front
 	{
 		moveForward(0.5, 600);
 		moveForward(1.75, 300);
@@ -166,11 +166,30 @@ void autonomous() {
 		moveForward(-0.5, 500);
 	}
 	else if (selector::auton == 0) //skills
-	{
-		moveForward(-0.5, 600);
-		moveForward(0.6, 200);
-		cata_motors.move_velocity(50);
-	}
+	{*/
+		// start of drift
+		left_drive_motors.move_relative(1.5 * 1600, 250);
+		right_drive_motors.move_relative(0.48 * 1600, 100);
+		pros::c::delay(100);
+		while (left_motor_1.get_actual_velocity() != 0)
+		{
+			pros::c::delay(5);
+		}
+		// end of drift
+		moveForward(0.1, 400);
+		// right drive forward fr alignment
+		right_drive_motors.move_relative(0.35 * 1600, 600);
+		pros::c::delay(100);
+		while (left_motor_1.get_actual_velocity() != 0)
+		{
+			pros::c::delay(5);
+		}
+		// end
+		cata_motors.move_velocity(75);
+		pros::c::delay(40000);
+		cata_motors.brake();
+		moveForward(-6, 600);
+	//}
 }
 
 void opcontrol() {
