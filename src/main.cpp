@@ -7,6 +7,7 @@
 #include "robot.hpp"
 #include "autoSelect/selection.h"
 
+
 void cata_thread() {
 	bool pressingR1 = false;
 	// off bumper 28
@@ -220,7 +221,9 @@ void opcontrol() {
 	    left_drive_motors.move(left);
 		right_drive_motors.move(right);
 
-		if (mainController.get_digital_new_press(DIGITAL_DOWN))
+    // hello from neovim
+
+    if (mainController.get_digital_new_press(DIGITAL_DOWN))
 		{
 			cata_motors.move_relative(-100, 100);
 		}
