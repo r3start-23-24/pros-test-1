@@ -177,18 +177,33 @@ void autonomous() {
 		}
 		// end of drift
 		moveForward(0.1, 400);
-		// right drive forward fr alignment
-		right_drive_motors.move_relative(0.35 * 1600, 600);
+		// right drive forward for alignment
+		right_drive_motors.move_relative(0.1 * 1600, 600);
 		pros::c::delay(100);
 		while (left_motor_1.get_actual_velocity() != 0)
 		{
 			pros::c::delay(5);
 		}
 		// end
-		cata_motors.move_velocity(75);
-		pros::c::delay(40000);
+		cata_motors.move_velocity(80);
+		pros::c::delay(35000);
 		cata_motors.brake();
-		moveForward(-6, 600);
+		moveForward(-1, 600);
+		turnRight(45, 200);
+		moveForward(-1.75, 300);
+		turnRight(-80, 200);
+		// go over bar
+		moveForward(-3, 600);
+		left_wing.set_value(true);
+		right_wing.set_value(true);
+		moveForward(-1, 600);
+		left_wing.set_value(false);
+		right_wing.set_value(false);
+		moveForward(0.5, 400);
+		turnRight(-30, 300);
+		moveForward(0.5, 300);
+		turnRight(30, 300);
+		moveForward(-2, 600);
 	//}
 }
 
