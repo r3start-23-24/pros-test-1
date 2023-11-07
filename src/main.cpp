@@ -167,7 +167,7 @@ void autonomous() {
 		moveForward(-0.5, 500);
 	}
 	else if (selector::auton == 0) //skills
-	{*/
+	{*//*
 		// start of drift
 		left_drive_motors.move_relative(1.5 * 1600, 250);
 		right_drive_motors.move_relative(0.48 * 1600, 100);
@@ -205,7 +205,37 @@ void autonomous() {
 		moveForward(0.5, 300);
 		turnRight(30, 300);
 		moveForward(-2, 600);
-	//}
+	//}*/
+	cata_motors.move_relative(50, 100);
+	intake_motors.move_velocity(200);
+	turnRight(180, 300);
+	moveForward(2, 450);
+	turnRight(-45, 300);
+	right_wing.set_value(true);
+	moveForward(0.5, 300);
+	intake_motors.move_velocity(-200);
+	turnRight(-45, 300);
+	right_wing.set_value(false);
+	moveForward(0.25, 400);
+	turnRight(180, 350);
+	left_wing.set_value(true);
+	moveForward(-0.25, 400);
+	left_wing.set_value(false);
+	moveForward(0.5, 300);
+	turnRight(105, 300);
+	intake_motors.move_velocity(200);
+	moveForward(2, 400);
+	moveForward(-0.5, 300);
+	turnRight(-100, 300);
+	right_wing.set_value(true);
+	moveForward(-1.25, 400);
+	turnRight(20, 300);
+	moveForward(-1, 450);
+	moveForward(0.3, 300);
+	turnRight(180, 400);
+	intake_motors.move_velocity(-200);
+	moveForward(-0.5, 300);
+	moveForward(0.6, 300);
 }
 
 void opcontrol() {
