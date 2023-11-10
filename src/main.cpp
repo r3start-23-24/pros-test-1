@@ -140,34 +140,47 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous() {
-	/*if (selector::auton == 1) //red front
-	{
+	//if (selector::auton == 1) //red front
+	//{
+		// at opposite goal
+		// off 28
+		// on 10
+		cata_motors.move(127);
+		while (cata_limit_switch.get_value_calibrated() > 25)
+		{
+			pros::c::delay(2);
+		}
+		cata_motors.move(-127);
+		pros::c::delay(500);
+		cata_motors.brake();
+		// cata 1 rotation code end
 		moveForward(0.5, 600);
 		moveForward(1.75, 300);
-		turnRight(45, 200);
+		turnRight(-45, 200);
 		moveForward(-0.3, 200);
-		turnRight(45, 200);
+		turnRight(-45, 200);
 		moveForward(0.3, 300);
 		intake_motors.move_velocity(-600);
 		moveForward(0.3, 300);
-		moveForward(-0.3, 300);
-		turnRight(200, 200);
 		moveForward(-0.5, 400);
-		moveForward(0.5, 300);
-		turnRight(-30, 300);
+		turnRight(-240, 300);
 		intake_motors.move_velocity(600);
-		moveForward(1, 400);
-		pros::c::delay(500);
-		moveForward(-0.2, 400);
-		turnRight(-225, 300);
-		moveForward(0.8, 300);
-		intake_motors.move_velocity(-600);
-		turnRight(30, 300);
-		moveForward(0.3, 400);
-		moveForward(-0.5, 500);
-	}
-	else if (selector::auton == 0) //skills
-	{*//*
+		moveForward(-1, 400);
+		turnRight(180, 400);
+	//}
+	//else if (selector::auton == 0) //skills
+	/*{
+		// cata down
+		pros::c::delay(100);
+		cata_motors.move_velocity(70);
+		while (cata_limit_switch.get_value_calibrated() < 25)
+		{
+			pros::c::delay(2);
+		}
+		pros::c::delay(250);
+		cata_motors.brake();
+		// end cata down
+		intake_motors.move_velocity(200);
 		// start of drift
 		left_drive_motors.move_relative(1.5 * 1600, 250);
 		right_drive_motors.move_relative(0.48 * 1600, 100);
@@ -205,15 +218,17 @@ void autonomous() {
 		moveForward(0.5, 300);
 		turnRight(30, 300);
 		moveForward(-2, 600);
-	//}*/
+	}*/
+	/*
+	// at same goal
 	cata_motors.move_relative(50, 100);
 	intake_motors.move_velocity(200);
-	moveForward(0.2, 100);
-	pros::c::delay(100);
+	moveForward(0.1, 100);
+	pros::c::delay(50);
 	moveForward(-2, 450);
 	turnRight(-45, 300);
 	right_wing.set_value(true);
-	moveForward(-0.5, 300);
+	moveForward(-1, 300);
 	intake_motors.move_velocity(-200);
 	turnRight(-45, 300);
 	right_wing.set_value(false);
@@ -237,6 +252,7 @@ void autonomous() {
 	intake_motors.move_velocity(-200);
 	moveForward(-0.5, 300);
 	moveForward(0.6, 300);
+	*/
 }
 
 void opcontrol() {
