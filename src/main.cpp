@@ -208,11 +208,12 @@ void autonomous() {
 	//}*/
 	cata_motors.move_relative(50, 100);
 	intake_motors.move_velocity(200);
-	turnRight(180, 300);
-	moveForward(2, 450);
+	moveForward(0.2, 100);
+	pros::c::delay(100);
+	moveForward(-2, 450);
 	turnRight(-45, 300);
 	right_wing.set_value(true);
-	moveForward(0.5, 300);
+	moveForward(-0.5, 300);
 	intake_motors.move_velocity(-200);
 	turnRight(-45, 300);
 	right_wing.set_value(false);
