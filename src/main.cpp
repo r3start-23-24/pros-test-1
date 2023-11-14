@@ -381,7 +381,6 @@ void opcontrol() {
 				right_blocker.set_value(true);
 				blocker_out = true;
 			}
-			
 		}
 
 		if (mainController.get_digital(DIGITAL_L1))
