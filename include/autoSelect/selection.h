@@ -3,11 +3,11 @@
 #include <string>
 
 /* 
-  selector::auton == 1 : Red Front
-  selector::auton == 2 : Red Back
+  selector::auton == 1 : Red same goal
+  selector::auton == 2 : Red other goal
   selector::auton == 3 : Do Nothing
-  selector::auton == -1 : Blue Front
-  selector::auton == -2 : Blue Back
+  selector::auton == -1 : Blue same goal
+  selector::auton == -2 : Blue other goal
   selector::auton == -3 : Do Nothing
   selector::auton == 0 : Skills
 */
