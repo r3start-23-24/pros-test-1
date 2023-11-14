@@ -337,16 +337,15 @@ void autonomous() {
 void opcontrol() {
 	pros::Task gifs(gifthread);
 
-	bool intakeOn = false;
-	bool intakeOnReversed = false;
-
 	bool left_wing_extended = false;
 	bool right_wing_extended = false;
+	bool blocker_out = false;
 
 	pros::c::delay(500);
 	//cata_down();
 
 	while (true) {
+		// drive
     	int power = mainController.get_analog(ANALOG_LEFT_Y);
 	    int turn = pow(2, (log(108)/(127*log(2))) * abs(mainController.get_analog(ANALOG_RIGHT_X))) + 19;
 		if (mainController.get_analog(ANALOG_RIGHT_X) < 2 && mainController.get_analog(ANALOG_RIGHT_X) > -2)
@@ -361,43 +360,28 @@ void opcontrol() {
 	    int right = power - turn;
 	    left_drive_motors.move(left);
 		right_drive_motors.move(right);
+		// end drive
 
-    // hello from neovim
-
-    if (mainController.get_digital_new_press(DIGITAL_DOWN))
+    	if (mainController.get_digital_new_press(DIGITAL_DOWN))
 		{
 			cata_motors.move_relative(-100, 100);
 		}
 
 		if (mainController.get_digital_new_press(DIGITAL_X))
 		{
-			if (intakeOn)
+			if (blocker_out)
 			{
-				intake_motors.move(0);
-				intakeOn = false;
-				intakeOnReversed = false;
+				left_blocker.set_value(false);
+				right_blocker.set_value(false);
+				blocker_out = false;
 			}
 			else
 			{
-				intake_motors.move(127);
-				intakeOn = true;
-				intakeOnReversed = false;
+				left_blocker.set_value(true);
+				right_blocker.set_value(true);
+				blocker_out = true;
 			}
-		}
-		else if (mainController.get_digital_new_press(DIGITAL_Y))
-		{
-			if (intakeOnReversed)
-			{
-				intake_motors.move(0);
-				intakeOn = false;
-				intakeOnReversed = false;
-			}
-			else
-			{
-				intake_motors.move(-127);
-				intakeOn = false;
-				intakeOnReversed = true;
-			}
+			
 		}
 
 		if (mainController.get_digital(DIGITAL_L1))
@@ -408,7 +392,7 @@ void opcontrol() {
 		{
 			intake_motors.move(-127);
 		}
-		else if (!(intakeOn || intakeOnReversed))
+		else
 		{
 			intake_motors.move(0);
 		}
