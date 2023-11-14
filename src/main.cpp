@@ -85,9 +85,9 @@ void gifthread() {
 		gif3.clean();
 	}
 }
-void moveForward(float tiles, int velocity) {
-	const int oneTile = 1600;
 
+const int oneTile = 1600;
+void moveForward(float tiles, int velocity) {
 	left_drive_motors.move_relative(tiles * oneTile, velocity);
 	right_drive_motors.move_relative(tiles * oneTile, velocity);
 	pros::c::delay(100);
@@ -142,7 +142,7 @@ void competition_initialize() {}
 void autonomous() {
 	//if (selector::auton == 1) // red front
 	//{
-		// at opposite goal but no AWP (dodge)
+		// at opposite goal but no AWP (USELESS)
 		// off 28
 		// on 10
 		/*cata_motors.move(127);
@@ -255,8 +255,9 @@ void autonomous() {
 	moveForward(-0.5, 300);
 	moveForward(0.6, 300);
 	*/
-	//end at same goal (points)
+	//end of auton
 
+/*
 	// at opposite goal (AWP)
 	// off 28 - on 10
 	cata_motors.move(127);
@@ -286,27 +287,18 @@ void autonomous() {
 	moveForward(0.5, 500);
 	// pushed in x2
 	moveForward(-0.5, 300);
-	turnRight(-200, 300);
-	cata_down();
-	intake_motors.move(127);
-	moveForward(1.5, 300);
-	turnRight(-180, 300);
-	moveForward(-1.5, 300);
-	// cata shoot
-	while (cata_limit_switch.get_value_calibrated() < 25)
-	{
-		pros::c::delay(2);
-	}
-	pros::c::delay(200);
-	while (cata_limit_switch.get_value_calibrated() > 25)
-	{
-		pros::c::delay(2);
-	}
-	cata_motors.brake();
-	// end cata shoot
 	right_wing.set_value(true);
-	turnRight(50, 300);
+	turnRight(65, 300);
 	moveForward(-1.5, 300);
+	// just move left
+	left_drive_motors.move_relative(0.15 * oneTile, 100);
+	pros::c::delay(100);
+	while (left_motor_1.get_actual_velocity() != 0)
+	{
+		pros::c::delay(5);
+	}
+	// end
+*/
 }
 
 void opcontrol() {
