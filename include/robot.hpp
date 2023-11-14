@@ -24,5 +24,8 @@ extern pros::Motor_Group intake_motors;
 extern pros::ADIDigitalOut left_wing;
 extern pros::ADIDigitalOut right_wing;
 
+extern pros::ADIDigitalOut left_blocker;
+extern pros::ADIDigitalOut right_blocker;
+
 #define ROBOT_HPP
 #endif
