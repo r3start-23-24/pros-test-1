@@ -145,7 +145,8 @@ void autonomous() {
 		// at opposite goal but no AWP (USELESS)
 		// off 28
 		// on 10
-		/*cata_motors.move(127);
+		right_wing.set_value(true);
+		cata_motors.move(127);
 		while (cata_limit_switch.get_value_calibrated() > 25)
 		{
 			pros::c::delay(2);
@@ -154,20 +155,34 @@ void autonomous() {
 		pros::c::delay(500);
 		cata_motors.brake();
 		// cata 1 rotation code end
-		moveForward(0.5, 600);
-		moveForward(1.75, 300);
+		right_wing.set_value(false);
+		intake_motors.move_velocity(100);
+		moveForward(1, 400);
+		pros::c::delay(200);
+		moveForward(-1.5, 400);
+		left_wing.set_value(true);
 		turnRight(-45, 200);
 		moveForward(-0.3, 200);
 		turnRight(-45, 200);
-		moveForward(0.3, 300);
-		intake_motors.move_velocity(-600);
-		moveForward(0.3, 300);
+		left_wing.set_value(false);
+		turnRight(40, 300);
+		moveForward(-0.75, 300);
+		turnRight(-40, 300);
+		// aligned
+		moveForward(-0.6, 600);
+		// pushed balls in
+		moveForward(0.2, 300);
+		turnRight(90, 300);
 		moveForward(-0.5, 400);
-		turnRight(-240, 300);
-		intake_motors.move_velocity(600);
-		moveForward(-1, 400);
-		turnRight(180, 400);
-		*/
+		moveForward(1, 300);
+		turnRight(30, 300);
+		moveForward(0.5, 350);
+		turnRight(90, 300);
+		intake_motors.move(-127);
+		moveForward(0.2, 400);
+		turnRight(-120, 300);
+		intake_motors.move(127);
+		moveForward(1.5, 300);
 	//}
 	//else if (selector::auton == 0) //skills
 	/*{
