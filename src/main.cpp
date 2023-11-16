@@ -212,8 +212,8 @@ void autonomous() {
 		turnRight(30, 300);
 		moveForward(-2, 600);
 	}
-	else if (selector::auton == 1) { // red same goal
-		// at same goal (points)
+	else if (selector::auton == -2) { // red same goal
+		// at opposite goal but no AWP (USELESS)
 		cata_motors.move_relative(50, 100);
 		intake_motors.move_velocity(200);
 		moveForward(0.1, 100);
@@ -289,8 +289,7 @@ void autonomous() {
 		}
 		// end
 	}
-	else if (selector::auton == -2) { // blue other goal
-		// at opposite goal but no AWP (USELESS)
+	else if (selector::auton == 1) { // red same goal
 		// off 28
 		// on 10
 		right_wing.set_value(true);
