@@ -167,14 +167,14 @@ void autonomous() {
 		// cata down
 		pros::c::delay(100);
 		cata_motors.move_velocity(70);
-		while (cata_limit_switch.get_value_calibrated() < 25)
+		while (cata_limit_switch.get_value_calibrated() > 25)
 		{
 			pros::c::delay(2);
 		}
 		pros::c::delay(250);
 		cata_motors.brake();
 		// end cata down
-		//intake_motors.move_velocity(200);
+
 		// start of drift DO NOT TOUCH
 		left_drive_motors.move_relative(1.5 * 1600, 250);
 		right_drive_motors.move_relative(0.48 * 1600, 100);
@@ -184,19 +184,19 @@ void autonomous() {
 			pros::c::delay(5);
 		}
 		// end of drift DO NOT TOUCH
+
 		moveForward(0.1, 400);
 		// right drive forward for alignment
 		right_drive_motors.move_relative(0.1 * 1600, 600);
 		pros::c::delay(100);
-		// cata
-		// while (left_motor_1.get_actual_velocity() != 0)
-		// {
-		// 	pros::c::delay(5);
-		// }
-		// // end
-		// cata_motors.move_velocity(80); // speed of cata can be changed here
-		// pros::c::delay(35000); // time shooting can be changed here
-		// cata_motors.brake();
+		while (right_motor_1.get_actual_velocity() != 0)
+		{
+			pros::c::delay(5);
+		}
+		// end
+		cata_motors.move_velocity(80); // speed of cata can be changed here
+		pros::c::delay(35000); // time shooting can be changed here
+		cata_motors.brake();
 		// change from here down
 		turnRight(-50, 200);
 		
