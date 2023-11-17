@@ -162,6 +162,7 @@ void disabled() {
 void competition_initialize() {}
 
 void autonomous() {
+	blocker.set_value(true);
 	if (selector::auton == 0) { // skills
 		// cata down
 		pros::c::delay(100);
@@ -173,7 +174,7 @@ void autonomous() {
 		pros::c::delay(250);
 		cata_motors.brake();
 		// end cata down
-		intake_motors.move_velocity(200);
+		//intake_motors.move_velocity(200);
 		// start of drift DO NOT TOUCH
 		left_drive_motors.move_relative(1.5 * 1600, 250);
 		right_drive_motors.move_relative(0.48 * 1600, 100);
@@ -187,30 +188,56 @@ void autonomous() {
 		// right drive forward for alignment
 		right_drive_motors.move_relative(0.1 * 1600, 600);
 		pros::c::delay(100);
-		while (left_motor_1.get_actual_velocity() != 0)
-		{
-			pros::c::delay(5);
-		}
-		// end
-		cata_motors.move_velocity(80); // speed of cata can be changed here
-		pros::c::delay(35000); // time shooting can be changed here
-		cata_motors.brake();
+		// cata
+		// while (left_motor_1.get_actual_velocity() != 0)
+		// {
+		// 	pros::c::delay(5);
+		// }
+		// // end
+		// cata_motors.move_velocity(80); // speed of cata can be changed here
+		// pros::c::delay(35000); // time shooting can be changed here
+		// cata_motors.brake();
+		// change from here down
+		turnRight(-50, 200);
+		
+		blocker.set_value(false);
 		moveForward(-1, 600);
-		turnRight(45, 200);
-		moveForward(-1.75, 300);
-		turnRight(-80, 200);
-		// go over bar
-		moveForward(-3, 600);
-		left_wing.set_value(true);
+		pros::c::delay(100);
+		
+		turnRight(20, 200);
+		moveForward(-2.7, 600);
+		turnRight(90, 200);
 		right_wing.set_value(true);
-		moveForward(-1, 600);
-		left_wing.set_value(false);
+		left_wing.set_value(true);
+		moveForward(-1.2, 500);
 		right_wing.set_value(false);
-		moveForward(0.5, 400);
-		turnRight(-30, 300);
-		moveForward(0.5, 300);
-		turnRight(30, 300);
-		moveForward(-2, 600);
+		left_wing.set_value(false);
+		turnRight(95, 200);
+		moveForward(-1.2, 600);
+		turnRight(-90, 200);
+		moveForward(-1.2, 600);
+		right_wing.set_value(true);
+		left_wing.set_value(true);
+		turnRight(-90, 200);
+		moveForward(-1.4, 600);
+		moveForward(1.4, 600);
+		moveForward(-1.4, 600);
+		//moveForward(-1, 600);
+		//turnRight(45, 200);
+		//moveForward(-1.75, 300);
+		//turnRight(-80, 200);
+		// go over bar
+		//moveForward(-3, 600);
+		//left_wing.set_value(true);
+		//right_wing.set_value(true);
+		//moveForward(-1, 600);
+		//left_wing.set_value(false);
+		//right_wing.set_value(false);
+		//moveForward(0.5, 400);
+		//turnRight(-30, 300);
+		//moveForward(0.5, 300);
+		//turnRight(30, 300);
+		//moveForward(-2, 600);
 	}
 	else if (selector::auton == 1) { // red same goal
 		// off 28
@@ -370,14 +397,12 @@ void opcontrol() {
 		{
 			if (blocker_out)
 			{
-				left_blocker.set_value(false);
-				right_blocker.set_value(false);
+				blocker.set_value(false);
 				blocker_out = false;
 			}
 			else
 			{
-				left_blocker.set_value(true);
-				right_blocker.set_value(true);
+				blocker.set_value(true);
 				blocker_out = true;
 			}
 		}

@@ -21,5 +21,4 @@ pros::Motor_Group intake_motors ({intake_motor_1, intake_motor_2});
 pros::ADIDigitalOut left_wing (3);
 pros::ADIDigitalOut right_wing (2);
 
-pros::ADIDigitalOut left_blocker (4);
-pros::ADIDigitalOut right_blocker (5);
+pros::ADIDigitalOut blocker (4);
