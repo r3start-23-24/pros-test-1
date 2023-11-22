@@ -7,6 +7,44 @@
 #include "robot.hpp"
 #include "autoSelect/selection.h"
 
+bool down_pressed = false;
+
+const int oneTile = 1600;
+void moveForward(float tiles, int velocity) {
+	left_drive_motors.move_relative(tiles * oneTile, velocity);
+	right_drive_motors.move_relative(tiles * oneTile, velocity);
+	pros::c::delay(100);
+	while (left_motor_1.get_actual_velocity() != 0)
+	{
+		pros::c::delay(5);
+	}
+}
+void turnRight(float degrees, int velocity) {
+	const int ninetyTurn = 80;
+	const int oneDegree = 550/90;
+
+	left_drive_motors.move_relative(oneDegree * degrees, velocity);
+	right_drive_motors.move_relative(-(oneDegree * degrees), velocity);
+	pros::c::delay(100);
+	while (left_motor_1.get_actual_velocity() != 0)
+	{
+		pros::c::delay(5);
+	}
+}
+void cata_down() {
+	cata_motors.move(127);
+	while (cata_limit_switch.get_value_calibrated() < 25 || down_pressed)
+	{
+		pros::c::delay(2);
+	}
+	while (cata_limit_switch.get_value_calibrated() > 25 || down_pressed)
+	{
+		pros::c::delay(2);
+	}
+	cata_motors.brake();
+	down_pressed = false;
+}
+
 
 void cata_thread() {
 	bool pressingR1 = false;
@@ -24,28 +62,22 @@ void cata_thread() {
 			if (pressingR1)
 			{
 				pressingR1 = false;
-				while (cata_limit_switch.get_value_calibrated() < 25 || mainController.get_digital_new_press(DIGITAL_DOWN))
+				while (cata_limit_switch.get_value_calibrated() < 25 || down_pressed)
 				{
 					pros::c::delay(2);
 				}
 				pros::c::delay(200);
-				while (cata_limit_switch.get_value_calibrated() > 25 || mainController.get_digital_new_press(DIGITAL_DOWN))
+				while (cata_limit_switch.get_value_calibrated() > 25 || down_pressed)
 				{
 					pros::c::delay(2);
 				}
 				cata_motors.brake();
+				down_pressed = false;
 			}
 		}
 		if (mainController.get_digital_new_press(DIGITAL_R2))
 		{
-			// cata down
-			cata_motors.move_velocity(70);
-			while (cata_limit_switch.get_value_calibrated() < 25 || mainController.get_digital_new_press(DIGITAL_DOWN))
-			{
-				pros::c::delay(2);
-			}
-			pros::c::delay(250);
-			cata_motors.brake();
+			cata_down();
 		}
 		pros::c::delay(2);
 	}
@@ -84,41 +116,6 @@ void gifthread() {
 		pros::c::delay(10000);
 		gif3.clean();
 	}
-}
-
-const int oneTile = 1600;
-void moveForward(float tiles, int velocity) {
-	left_drive_motors.move_relative(tiles * oneTile, velocity);
-	right_drive_motors.move_relative(tiles * oneTile, velocity);
-	pros::c::delay(100);
-	while (left_motor_1.get_actual_velocity() != 0)
-	{
-		pros::c::delay(5);
-	}
-}
-void turnRight(float degrees, int velocity) {
-	const int ninetyTurn = 80;
-	const int oneDegree = 550/90;
-
-	left_drive_motors.move_relative(oneDegree * degrees, velocity);
-	right_drive_motors.move_relative(-(oneDegree * degrees), velocity);
-	pros::c::delay(100);
-	while (left_motor_1.get_actual_velocity() != 0)
-	{
-		pros::c::delay(5);
-	}
-}
-void cata_down() {
-	cata_motors.move(127);
-	while (cata_limit_switch.get_value_calibrated() < 25)
-	{
-		pros::c::delay(2);
-	}
-	while (cata_limit_switch.get_value_calibrated() > 25)
-	{
-		pros::c::delay(2);
-	}
-	cata_motors.brake();
 }
 
 void initialize() {
@@ -389,6 +386,7 @@ void opcontrol() {
     	if (mainController.get_digital_new_press(DIGITAL_DOWN))
 		{
 			cata_motors.move_relative(-100, 100);
+			down_pressed = true;
 		}
 
 		if (mainController.get_digital_new_press(DIGITAL_X))
