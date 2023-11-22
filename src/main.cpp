@@ -164,7 +164,7 @@ void competition_initialize() {}
 void autonomous() {
 	blocker.set_value(true);
 	if (selector::auton == 0) { // skills
-		// cata down
+		/*/ cata down
 		pros::c::delay(100);
 		cata_motors.move_velocity(70);
 		while (cata_limit_switch.get_value_calibrated() > 25)
@@ -173,7 +173,7 @@ void autonomous() {
 		}
 		pros::c::delay(250);
 		cata_motors.brake();
-		// end cata down
+		*/// end cata down
 
 		// start of drift DO NOT TOUCH
 		left_drive_motors.move_relative(1.5 * 1600, 250);
@@ -185,7 +185,7 @@ void autonomous() {
 		}
 		// end of drift DO NOT TOUCH
 
-		moveForward(0.1, 400);
+		moveForward(0.13, 400);
 		// right drive forward for alignment
 		right_drive_motors.move_relative(0.1 * 1600, 600);
 		pros::c::delay(100);
@@ -199,13 +199,11 @@ void autonomous() {
 		cata_motors.brake();
 		// change from here down
 		turnRight(-50, 200);
-		
 		blocker.set_value(false);
 		moveForward(-1, 600);
 		pros::c::delay(100);
-		
 		turnRight(20, 200);
-		moveForward(-2.7, 600);
+		moveForward(-3, 600);
 		turnRight(90, 200);
 		right_wing.set_value(true);
 		left_wing.set_value(true);
@@ -215,35 +213,19 @@ void autonomous() {
 		turnRight(95, 200);
 		moveForward(-1.2, 600);
 		turnRight(-90, 200);
-		moveForward(-1.2, 600);
+		moveForward(-1, 600);
 		right_wing.set_value(true);
 		left_wing.set_value(true);
-		turnRight(-90, 200);
+		turnRight(-100, 200);
 		moveForward(-1.4, 600);
 		moveForward(1.4, 600);
 		moveForward(-1.4, 600);
-		//moveForward(-1, 600);
-		//turnRight(45, 200);
-		//moveForward(-1.75, 300);
-		//turnRight(-80, 200);
-		// go over bar
-		//moveForward(-3, 600);
-		//left_wing.set_value(true);
-		//right_wing.set_value(true);
-		//moveForward(-1, 600);
-		//left_wing.set_value(false);
-		//right_wing.set_value(false);
-		//moveForward(0.5, 400);
-		//turnRight(-30, 300);
-		//moveForward(0.5, 300);
-		//turnRight(30, 300);
-		//moveForward(-2, 600);
 	}
 	else if (selector::auton == 1) { // red same goal
 		// off 28
 		// on 10
-		right_wing.set_value(true);
-		cata_motors.move(127);
+		//right_wing.set_value(true);
+		/*cata_motors.move(127);
 		while (cata_limit_switch.get_value_calibrated() > 25)
 		{
 			pros::c::delay(2);
@@ -251,27 +233,41 @@ void autonomous() {
 		cata_motors.move(-127);
 		pros::c::delay(500);
 		cata_motors.brake();
-		// cata 1 rotation code end
-		right_wing.set_value(false);
-		intake_motors.move_velocity(100);
-		moveForward(1, 400);
-		pros::c::delay(200);
-		moveForward(-1.5, 400);
+		*/// cata 1 rotation code end
+		//pros::c::delay(1000); // instead of cata thing
+		//right_wing.set_value(false);
+		intake_motors.move_velocity(200);
+		moveForward(1, 500);
+		pros::c::delay(150);
+		moveForward(-1.5, 500);
 		left_wing.set_value(true);
-		turnRight(-45, 200);
-		moveForward(-0.3, 200);
-		turnRight(-45, 200);
+		turnRight(-45, 300);
+		moveForward(-0.3, 400);
+		turnRight(-45, 300);
 		left_wing.set_value(false);
-		turnRight(40, 300);
-		moveForward(-0.75, 300);
-		turnRight(-40, 300);
+		turnRight(40, 350);
+		moveForward(-0.75, 450);
+		turnRight(-40, 350);
 		// aligned
 		moveForward(-0.6, 600);
+		intake_motors.move(0);
 		// pushed balls in
-		moveForward(0.2, 300);
-		turnRight(90, 300);
-		moveForward(-0.5, 400);
-		moveForward(1, 300);
+		moveForward(0.2, 400);
+		moveForward(-0.3, 600);
+		// pushed x2
+		moveForward(0.2, 450);
+		turnRight(90, 400);
+		moveForward(-0.5, 500);
+		moveForward(1.4, 500);
+		turnRight(100, 350);
+		moveForward(0.7, 450);
+		turnRight(90, 350);
+		intake_motors.move_velocity(-200);
+		pros::c::delay(200);
+		moveForward(1.4, 600);
+		moveForward(-0.5, 500);
+		moveForward(0.8, 600);
+		/*
 		turnRight(30, 300);
 		moveForward(0.5, 350);
 		turnRight(90, 300);
@@ -280,11 +276,12 @@ void autonomous() {
 		turnRight(-120, 300);
 		intake_motors.move(127);
 		moveForward(1.5, 300);
+		*/
 	}
 	else if (selector::auton == 2) { // red other goal
 		// at opposite goal (AWP)
 		// off 28 - on 10
-		cata_motors.move(127);
+		/*cata_motors.move(127);
 		while (cata_limit_switch.get_value_calibrated() > 25)
 		{
 			pros::c::delay(2);
@@ -292,12 +289,13 @@ void autonomous() {
 		cata_motors.move(-127);
 		pros::c::delay(500);
 		cata_motors.brake();
-		// cata 1 rotation code end
+		*/// cata 1 rotation code end
 		right_wing.set_value(true);
 		intake_motors.move(127);
 		moveForward(-0.4, 400);
 		pros::c::delay(100);
 		right_wing.set_value(false);
+		intake_motors.move(0);
 		turnRight(-90, 300);
 		moveForward(1, 300);
 		turnRight(-45, 300);
