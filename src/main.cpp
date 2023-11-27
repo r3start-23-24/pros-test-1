@@ -422,8 +422,8 @@ void opcontrol() {
 			}
 		}
 
+		mainController.clear();
 		mainController.print(0,0,"%f", cata_motor.get_temperature());
 		pros::c::delay(5);
-		mainController.clear();
 	}
 }
