@@ -11,14 +11,10 @@ pros::Motor right_motor_3 (20, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENC
 pros::Motor_Group left_drive_motors ({left_motor_1, left_motor_2, left_motor_3});
 pros::Motor_Group right_drive_motors ({right_motor_1, right_motor_2, right_motor_3});
 
-pros::Motor cata_motor_1 (6, pros::E_MOTOR_GEARSET_36, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor cata_motor_2 (5, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor_Group cata_motors ({cata_motor_1, cata_motor_2});
+pros::Motor cata_motor (9, pros::E_MOTOR_GEARSET_36, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::ADIAnalogIn cata_limit_switch('A');
 
-pros::Motor intake_motor_1 (10, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor intake_motor_2 (7, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor_Group intake_motors ({intake_motor_1, intake_motor_2});
+pros::Motor intake_motor (2, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES);
 
 pros::ADIDigitalOut left_wing (3);
 pros::ADIDigitalOut right_wing (2);

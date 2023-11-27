@@ -32,7 +32,7 @@ void turnRight(float degrees, int velocity) {
 	}
 }
 void cata_down() {
-	cata_motors.move(127);
+	cata_motor.move(127);
 	while (cata_limit_switch.get_value_calibrated() < 25 || down_pressed)
 	{
 		pros::c::delay(2);
@@ -41,7 +41,7 @@ void cata_down() {
 	{
 		pros::c::delay(2);
 	}
-	cata_motors.brake();
+	cata_motor.brake();
 	down_pressed = false;
 }
 
@@ -55,7 +55,7 @@ void cata_thread() {
 		if (mainController.get_digital(DIGITAL_R1))
 		{
 			// cata shoot constantly
-			cata_motors.move_velocity(70);
+			cata_motor.move_velocity(100);
 			pressingR1 = true;
 		}
 		else {
@@ -71,7 +71,7 @@ void cata_thread() {
 				{
 					pros::c::delay(2);
 				}
-				cata_motors.brake();
+				cata_motor.brake();
 				down_pressed = false;
 			}
 		}
@@ -90,13 +90,13 @@ void up_button_thread() {
 		{
 			if (on)
 			{
-				cata_motors.move_velocity(0);
-				cata_motors.brake();
+				cata_motor.move_velocity(0);
+				cata_motor.brake();
 				on = false;
 			}
 			else
 			{
-				cata_motors.move_velocity(70);
+				cata_motor.move_velocity(100);
 				on = true;
 			}
 		}
@@ -121,10 +121,9 @@ void gifthread() {
 void initialize() {
 	selector::init();
 
-	cata_motors.set_brake_modes(MOTOR_BRAKE_HOLD);
+	cata_motor.set_brake_mode(MOTOR_BRAKE_HOLD);
 	cata_limit_switch.calibrate();
-	cata_motors.set_brake_modes(MOTOR_BRAKE_HOLD);
-	intake_motors.set_brake_modes(MOTOR_BRAKE_BRAKE);
+	intake_motor.set_brake_mode(MOTOR_BRAKE_BRAKE);
 
 	pros::Task cata(cata_thread);
 	//pros::Task cata_two(up_button_thread);
@@ -163,13 +162,13 @@ void autonomous() {
 	if (selector::auton == 0) { // skills
 		/*/ cata down
 		pros::c::delay(100);
-		cata_motors.move_velocity(70);
+		cata_motor.move_velocity(70);
 		while (cata_limit_switch.get_value_calibrated() > 25)
 		{
 			pros::c::delay(2);
 		}
 		pros::c::delay(250);
-		cata_motors.brake();
+		cata_motor.brake();
 		*/// end cata down
 
 		// start of drift DO NOT TOUCH
@@ -191,9 +190,9 @@ void autonomous() {
 			pros::c::delay(5);
 		}
 		// end
-		cata_motors.move_velocity(80); // speed of cata can be changed here
+		cata_motor.move_velocity(100); // speed of cata can be changed here
 		pros::c::delay(35000); // time shooting can be changed here
-		cata_motors.brake();
+		cata_motor.brake();
 		// change from here down
 		turnRight(-50, 200);
 		blocker.set_value(false);
@@ -222,18 +221,18 @@ void autonomous() {
 		// off 28
 		// on 10
 		//right_wing.set_value(true);
-		/*cata_motors.move(127);
+		/*cata_motor.move(127);
 		while (cata_limit_switch.get_value_calibrated() > 25)
 		{
 			pros::c::delay(2);
 		}
-		cata_motors.move(-127);
+		cata_motor.move(-127);
 		pros::c::delay(500);
-		cata_motors.brake();
+		cata_motor.brake();
 		*/// cata 1 rotation code end
 		//pros::c::delay(1000); // instead of cata thing
 		//right_wing.set_value(false);
-		intake_motors.move_velocity(200);
+		intake_motor.move_velocity(600);
 		moveForward(1, 500);
 		pros::c::delay(150);
 		moveForward(-1.5, 500);
@@ -247,7 +246,7 @@ void autonomous() {
 		turnRight(-40, 350);
 		// aligned
 		moveForward(-0.6, 600);
-		intake_motors.move(0);
+		intake_motor.move(0);
 		// pushed balls in
 		moveForward(0.2, 400);
 		moveForward(-0.3, 600);
@@ -259,7 +258,7 @@ void autonomous() {
 		turnRight(100, 350);
 		moveForward(0.7, 450);
 		turnRight(90, 350);
-		intake_motors.move_velocity(-200);
+		intake_motor.move_velocity(-600);
 		pros::c::delay(200);
 		moveForward(1.4, 600);
 		moveForward(-0.5, 500);
@@ -268,38 +267,38 @@ void autonomous() {
 		turnRight(30, 300);
 		moveForward(0.5, 350);
 		turnRight(90, 300);
-		intake_motors.move(-127);
+		intake_motor.move(-127);
 		moveForward(0.2, 400);
 		turnRight(-120, 300);
-		intake_motors.move(127);
+		intake_motor.move(127);
 		moveForward(1.5, 300);
 		*/
 	}
 	else if (selector::auton == 2) { // red other goal
 		// at opposite goal (AWP)
 		// off 28 - on 10
-		/*cata_motors.move(127);
+		/*cata_motor.move(127);
 		while (cata_limit_switch.get_value_calibrated() > 25)
 		{
 			pros::c::delay(2);
 		}
-		cata_motors.move(-127);
+		cata_motor.move(-127);
 		pros::c::delay(500);
-		cata_motors.brake();
+		cata_motor.brake();
 		*/// cata 1 rotation code end
 		right_wing.set_value(true);
-		intake_motors.move(127);
+		intake_motor.move(127);
 		moveForward(-0.4, 400);
 		pros::c::delay(100);
 		right_wing.set_value(false);
-		intake_motors.move(0);
+		intake_motor.move(0);
 		turnRight(-90, 300);
 		moveForward(1, 300);
 		turnRight(-45, 300);
 		moveForward(0.8, 400);
 		// turn towards goal
 		turnRight(-100, 300);
-		intake_motors.move(-127);
+		intake_motor.move(-127);
 		moveForward(1, 400);
 		// pushed in
 		moveForward(-0.5, 300);
@@ -320,15 +319,15 @@ void autonomous() {
 	}
 	else if (selector::auton == -2) { // red other goal
 		// at opposite goal but no AWP (USELESS)
-		cata_motors.move_relative(50, 100);
-		intake_motors.move_velocity(200);
+		cata_motor.move_relative(50, 100);
+		intake_motor.move_velocity(600);
 		moveForward(0.1, 100);
 		pros::c::delay(50);
 		moveForward(-2, 450);
 		turnRight(-45, 300);
 		right_wing.set_value(true);
 		moveForward(-1, 300);
-		intake_motors.move_velocity(-200);
+		intake_motor.move_velocity(-600);
 		turnRight(-45, 300);
 		right_wing.set_value(false);
 		moveForward(0.25, 400);
@@ -338,7 +337,7 @@ void autonomous() {
 		left_wing.set_value(false);
 		moveForward(0.5, 300);
 		turnRight(105, 300);
-		intake_motors.move_velocity(200);
+		intake_motor.move_velocity(600);
 		moveForward(2, 400);
 		moveForward(-0.5, 300);
 		turnRight(-100, 300);
@@ -348,7 +347,7 @@ void autonomous() {
 		moveForward(-1, 450);
 		moveForward(0.3, 300);
 		turnRight(180, 400);
-		intake_motors.move_velocity(-200);
+		intake_motor.move_velocity(-600);
 		moveForward(-0.5, 300);
 		moveForward(0.6, 300);
 		//end of auton path
@@ -385,7 +384,7 @@ void opcontrol() {
 
     	if (mainController.get_digital_new_press(DIGITAL_DOWN))
 		{
-			cata_motors.move_relative(-100, 100);
+			cata_motor.move_relative(-100, 100);
 			down_pressed = true;
 		}
 
@@ -405,15 +404,15 @@ void opcontrol() {
 
 		if (mainController.get_digital(DIGITAL_L1))
 		{
-			intake_motors.move(127);
+			intake_motor.move(127);
 		}
 		else if (mainController.get_digital(DIGITAL_L2))
 		{
-			intake_motors.move(-127);
+			intake_motor.move(-127);
 		}
 		else
 		{
-			intake_motors.move(0);
+			intake_motor.move(0);
 		}
 
 		if (mainController.get_digital_new_press(DIGITAL_LEFT))
