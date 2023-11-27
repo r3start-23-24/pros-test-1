@@ -131,27 +131,7 @@ void initialize() {
 }
 
 void disabled() {
-	while (true)
-	{
-		if (selector::auton == 0)
-		{
-			mainController.print(0, 0, "skills");
-		}
-		else if (selector::auton == 1)
-		{
-			mainController.print(0, 0, "same goal");
-		}
-		else if (selector::auton == 2)
-		{
-			mainController.print(0, 0, "other goal (AWP)");
-		}
-		else if (selector::auton == -2)
-		{
-			mainController.print(0, 0, "other goal (no AWP)");
-		}
-		mainController.clear();
-		pros::c::delay(500);
-	}
+	
 }
 
 // pre-auton (eg auton selector)
@@ -441,8 +421,9 @@ void opcontrol() {
 				right_wing_extended = true;
 			}
 		}
-		
-		printf("%d\n", cata_limit_switch.get_value());
-	    pros::c::delay(5);
+
+		mainController.print(0,0,"%f", cata_motor.get_temperature());
+		pros::c::delay(5);
+		mainController.clear();
 	}
 }
