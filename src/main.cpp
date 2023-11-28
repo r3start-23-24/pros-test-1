@@ -422,6 +422,6 @@ void opcontrol() {
 		}
 
 		pros::c::delay(5);
-		printf("%f", cata_motor.get_temperature());
+		printf("%f\n", cata_motor.get_temperature());
 	}
 }
