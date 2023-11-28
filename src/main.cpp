@@ -1,6 +1,5 @@
 #include "main.h"
 #include "gif-pros/gifclass.hpp"
-#include "pros/adi.h"
 #include "pros/misc.h"
 #include "pros/rtos.h"
 #include "pros/rtos.hpp"
@@ -121,7 +120,7 @@ void gifthread() {
 void initialize() {
 	selector::init();
 
-	cata_motor.set_brake_mode(MOTOR_BRAKE_HOLD);
+	cata_motor.set_brake_mode(MOTOR_BRAKE_COAST);
 	cata_limit_switch.calibrate();
 	intake_motor.set_brake_mode(MOTOR_BRAKE_BRAKE);
 
@@ -422,8 +421,7 @@ void opcontrol() {
 			}
 		}
 
-		mainController.clear();
-		mainController.print(0,0,"%f", cata_motor.get_temperature());
 		pros::c::delay(5);
+		printf("%f", cata_motor.get_temperature());
 	}
 }
