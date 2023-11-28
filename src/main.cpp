@@ -1,6 +1,7 @@
 #include "main.h"
 #include "gif-pros/gifclass.hpp"
 #include "pros/misc.h"
+#include "pros/motors.h"
 #include "pros/rtos.h"
 #include "pros/rtos.hpp"
 #include "robot.hpp"
@@ -31,6 +32,7 @@ void turnRight(float degrees, int velocity) {
 	}
 }
 void cata_down() {
+	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	cata_motor.move(127);
 	while (cata_limit_switch.get_value_calibrated() < 25 || down_pressed)
 	{
@@ -41,6 +43,7 @@ void cata_down() {
 		pros::c::delay(2);
 	}
 	cata_motor.brake();
+	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	down_pressed = false;
 }
 
@@ -60,6 +63,7 @@ void cata_thread() {
 		else {
 			if (pressingR1)
 			{
+				cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 				pressingR1 = false;
 				while (cata_limit_switch.get_value_calibrated() < 25 || down_pressed)
 				{
@@ -71,6 +75,7 @@ void cata_thread() {
 					pros::c::delay(2);
 				}
 				cata_motor.brake();
+				cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 				down_pressed = false;
 			}
 		}
