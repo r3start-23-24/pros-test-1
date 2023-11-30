@@ -1,90 +1,13 @@
 #include "main.h"
 #include "gif-pros/gifclass.hpp"
-#include "pros/adi.h"
 #include "pros/misc.h"
+#include "pros/motors.h"
 #include "pros/rtos.h"
 #include "pros/rtos.hpp"
 #include "robot.hpp"
 #include "autoSelect/selection.h"
 
-
-void cata_thread() {
-	bool pressingR1 = false;
-	// off bumper 28
-	// on bumper 10
-	while (true)
-	{
-		if (mainController.get_digital(DIGITAL_R1))
-		{
-			// cata shoot constantly
-			cata_motors.move_velocity(70);
-			pressingR1 = true;
-		}
-		else {
-			if (pressingR1)
-			{
-				pressingR1 = false;
-				while (cata_limit_switch.get_value_calibrated() < 25 || mainController.get_digital_new_press(DIGITAL_DOWN))
-				{
-					pros::c::delay(2);
-				}
-				pros::c::delay(200);
-				while (cata_limit_switch.get_value_calibrated() > 25 || mainController.get_digital_new_press(DIGITAL_DOWN))
-				{
-					pros::c::delay(2);
-				}
-				cata_motors.brake();
-			}
-		}
-		if (mainController.get_digital_new_press(DIGITAL_R2))
-		{
-			// cata down
-			cata_motors.move_velocity(70);
-			while (cata_limit_switch.get_value_calibrated() < 25 || mainController.get_digital_new_press(DIGITAL_DOWN))
-			{
-				pros::c::delay(2);
-			}
-			pros::c::delay(250);
-			cata_motors.brake();
-		}
-		pros::c::delay(2);
-	}
-}
-void up_button_thread() {
-	bool on = false;
-	while (true)
-	{
-		if (mainController.get_digital_new_press(DIGITAL_UP))
-		{
-			if (on)
-			{
-				cata_motors.move_velocity(0);
-				cata_motors.brake();
-				on = false;
-			}
-			else
-			{
-				cata_motors.move_velocity(70);
-				on = true;
-			}
-		}
-		pros::c::delay(2);
-	}
-}
-void gifthread() {
-	while (true)
-	{
-		Gif gif1("/usd/gif1.gif", lv_scr_act());
-		pros::c::delay(10000);
-		gif1.clean();
-		Gif gif2("/usd/gif2.gif", lv_scr_act());
-		pros::c::delay(10000);
-		gif2.clean();
-		Gif gif3("/usd/gif3.gif", lv_scr_act());
-		pros::c::delay(10000);
-		gif3.clean();
-	}
-}
+bool down_pressed = false;
 
 const int oneTile = 1600;
 void moveForward(float tiles, int velocity) {
@@ -109,25 +32,102 @@ void turnRight(float degrees, int velocity) {
 	}
 }
 void cata_down() {
-	cata_motors.move(127);
-	while (cata_limit_switch.get_value_calibrated() < 25)
+	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	cata_motor.move(127);
+	while (cata_limit_switch.get_value_calibrated() < 25 || down_pressed)
 	{
 		pros::c::delay(2);
 	}
-	while (cata_limit_switch.get_value_calibrated() > 25)
+	while (cata_limit_switch.get_value_calibrated() > 25 || down_pressed)
 	{
 		pros::c::delay(2);
 	}
-	cata_motors.brake();
+	cata_motor.brake();
+	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+	down_pressed = false;
+}
+
+
+void cata_thread() {
+	bool pressingR1 = false;
+	// off bumper 28
+	// on bumper 10
+	while (true)
+	{
+		if (mainController.get_digital(DIGITAL_R1))
+		{
+			// cata shoot constantly
+			cata_motor.move_velocity(100);
+			pressingR1 = true;
+		}
+		else {
+			if (pressingR1)
+			{
+				cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+				pressingR1 = false;
+				while (cata_limit_switch.get_value_calibrated() < 25 || down_pressed)
+				{
+					pros::c::delay(2);
+				}
+				pros::c::delay(200);
+				while (cata_limit_switch.get_value_calibrated() > 25 || down_pressed)
+				{
+					pros::c::delay(2);
+				}
+				cata_motor.brake();
+				cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+				down_pressed = false;
+			}
+		}
+		if (mainController.get_digital_new_press(DIGITAL_R2))
+		{
+			cata_down();
+		}
+		pros::c::delay(2);
+	}
+}
+void up_button_thread() {
+	bool on = false;
+	while (true)
+	{
+		if (mainController.get_digital_new_press(DIGITAL_UP))
+		{
+			if (on)
+			{
+				cata_motor.move_velocity(0);
+				cata_motor.brake();
+				on = false;
+			}
+			else
+			{
+				cata_motor.move_velocity(100);
+				on = true;
+			}
+		}
+		pros::c::delay(2);
+	}
+}
+void gifthread() {
+	while (true)
+	{
+		Gif gif1("/usd/gif1.gif", lv_scr_act());
+		pros::c::delay(10000);
+		gif1.clean();
+		Gif gif2("/usd/gif2.gif", lv_scr_act());
+		pros::c::delay(10000);
+		gif2.clean();
+		Gif gif3("/usd/gif3.gif", lv_scr_act());
+		pros::c::delay(10000);
+		gif3.clean();
+	}
 }
 
 void initialize() {
 	selector::init();
 
-	cata_motors.set_brake_modes(MOTOR_BRAKE_HOLD);
+	cata_motor.set_brake_mode(MOTOR_BRAKE_COAST);
 	cata_limit_switch.calibrate();
-	cata_motors.set_brake_modes(MOTOR_BRAKE_HOLD);
-	intake_motors.set_brake_modes(MOTOR_BRAKE_BRAKE);
+	intake_motor.set_brake_mode(MOTOR_BRAKE_BRAKE);
 
 	pros::Task cata(cata_thread);
 	//pros::Task cata_two(up_button_thread);
@@ -135,27 +135,7 @@ void initialize() {
 }
 
 void disabled() {
-	while (true)
-	{
-		if (selector::auton == 0)
-		{
-			mainController.print(0, 0, "skills");
-		}
-		else if (selector::auton == 1)
-		{
-			mainController.print(0, 0, "same goal");
-		}
-		else if (selector::auton == 2)
-		{
-			mainController.print(0, 0, "other goal (AWP)");
-		}
-		else if (selector::auton == -2)
-		{
-			mainController.print(0, 0, "other goal (no AWP)");
-		}
-		mainController.clear();
-		pros::c::delay(500);
-	}
+	
 }
 
 // pre-auton (eg auton selector)
@@ -164,16 +144,16 @@ void competition_initialize() {}
 void autonomous() {
 	blocker.set_value(true);
 	if (selector::auton == 0) { // skills
-		// cata down
+		/*/ cata down
 		pros::c::delay(100);
-		cata_motors.move_velocity(70);
+		cata_motor.move_velocity(70);
 		while (cata_limit_switch.get_value_calibrated() > 25)
 		{
 			pros::c::delay(2);
 		}
 		pros::c::delay(250);
-		cata_motors.brake();
-		// end cata down
+		cata_motor.brake();
+		*/// end cata down
 
 		// start of drift DO NOT TOUCH
 		left_drive_motors.move_relative(1.5 * 1600, 250);
@@ -185,7 +165,7 @@ void autonomous() {
 		}
 		// end of drift DO NOT TOUCH
 
-		moveForward(0.1, 400);
+		moveForward(0.13, 400);
 		// right drive forward for alignment
 		right_drive_motors.move_relative(0.1 * 1600, 600);
 		pros::c::delay(100);
@@ -194,18 +174,16 @@ void autonomous() {
 			pros::c::delay(5);
 		}
 		// end
-		cata_motors.move_velocity(80); // speed of cata can be changed here
+		cata_motor.move_velocity(100); // speed of cata can be changed here
 		pros::c::delay(35000); // time shooting can be changed here
-		cata_motors.brake();
+		cata_motor.brake();
 		// change from here down
 		turnRight(-50, 200);
-		
 		blocker.set_value(false);
 		moveForward(-1, 600);
 		pros::c::delay(100);
-		
 		turnRight(20, 200);
-		moveForward(-2.7, 600);
+		moveForward(-3, 600);
 		turnRight(90, 200);
 		right_wing.set_value(true);
 		left_wing.set_value(true);
@@ -215,96 +193,96 @@ void autonomous() {
 		turnRight(95, 200);
 		moveForward(-1.2, 600);
 		turnRight(-90, 200);
-		moveForward(-1.2, 600);
+		moveForward(-1, 600);
 		right_wing.set_value(true);
 		left_wing.set_value(true);
-		turnRight(-90, 200);
+		turnRight(-100, 200);
 		moveForward(-1.4, 600);
 		moveForward(1.4, 600);
 		moveForward(-1.4, 600);
-		//moveForward(-1, 600);
-		//turnRight(45, 200);
-		//moveForward(-1.75, 300);
-		//turnRight(-80, 200);
-		// go over bar
-		//moveForward(-3, 600);
-		//left_wing.set_value(true);
-		//right_wing.set_value(true);
-		//moveForward(-1, 600);
-		//left_wing.set_value(false);
-		//right_wing.set_value(false);
-		//moveForward(0.5, 400);
-		//turnRight(-30, 300);
-		//moveForward(0.5, 300);
-		//turnRight(30, 300);
-		//moveForward(-2, 600);
 	}
 	else if (selector::auton == 1) { // red same goal
 		// off 28
 		// on 10
-		right_wing.set_value(true);
-		cata_motors.move(127);
+		//right_wing.set_value(true);
+		/*cata_motor.move(127);
 		while (cata_limit_switch.get_value_calibrated() > 25)
 		{
 			pros::c::delay(2);
 		}
-		cata_motors.move(-127);
+		cata_motor.move(-127);
 		pros::c::delay(500);
-		cata_motors.brake();
-		// cata 1 rotation code end
-		right_wing.set_value(false);
-		intake_motors.move_velocity(100);
-		moveForward(1, 400);
-		pros::c::delay(200);
-		moveForward(-1.5, 400);
+		cata_motor.brake();
+		*/// cata 1 rotation code end
+		//pros::c::delay(1000); // instead of cata thing
+		//right_wing.set_value(false);
+		intake_motor.move_velocity(600);
+		moveForward(1, 500);
+		pros::c::delay(150);
+		moveForward(-1.5, 500);
 		left_wing.set_value(true);
-		turnRight(-45, 200);
-		moveForward(-0.3, 200);
-		turnRight(-45, 200);
+		turnRight(-45, 300);
+		moveForward(-0.3, 400);
+		turnRight(-45, 300);
 		left_wing.set_value(false);
-		turnRight(40, 300);
-		moveForward(-0.75, 300);
-		turnRight(-40, 300);
+		turnRight(40, 350);
+		moveForward(-0.75, 450);
+		turnRight(-40, 350);
 		// aligned
 		moveForward(-0.6, 600);
+		intake_motor.move(0);
 		// pushed balls in
-		moveForward(0.2, 300);
-		turnRight(90, 300);
-		moveForward(-0.5, 400);
-		moveForward(1, 300);
+		moveForward(0.2, 400);
+		moveForward(-0.3, 600);
+		// pushed x2
+		moveForward(0.2, 450);
+		turnRight(90, 400);
+		moveForward(-0.5, 500);
+		moveForward(1.4, 500);
+		turnRight(100, 350);
+		moveForward(0.7, 450);
+		turnRight(90, 350);
+		intake_motor.move_velocity(-600);
+		pros::c::delay(200);
+		moveForward(1.4, 600);
+		moveForward(-0.5, 500);
+		moveForward(0.8, 600);
+		/*
 		turnRight(30, 300);
 		moveForward(0.5, 350);
 		turnRight(90, 300);
-		intake_motors.move(-127);
+		intake_motor.move(-127);
 		moveForward(0.2, 400);
 		turnRight(-120, 300);
-		intake_motors.move(127);
+		intake_motor.move(127);
 		moveForward(1.5, 300);
+		*/
 	}
 	else if (selector::auton == 2) { // red other goal
 		// at opposite goal (AWP)
 		// off 28 - on 10
-		cata_motors.move(127);
+		/*cata_motor.move(127);
 		while (cata_limit_switch.get_value_calibrated() > 25)
 		{
 			pros::c::delay(2);
 		}
-		cata_motors.move(-127);
+		cata_motor.move(-127);
 		pros::c::delay(500);
-		cata_motors.brake();
-		// cata 1 rotation code end
+		cata_motor.brake();
+		*/// cata 1 rotation code end
 		right_wing.set_value(true);
-		intake_motors.move(127);
+		intake_motor.move(127);
 		moveForward(-0.4, 400);
 		pros::c::delay(100);
 		right_wing.set_value(false);
+		intake_motor.move(0);
 		turnRight(-90, 300);
 		moveForward(1, 300);
 		turnRight(-45, 300);
 		moveForward(0.8, 400);
 		// turn towards goal
 		turnRight(-100, 300);
-		intake_motors.move(-127);
+		intake_motor.move(-127);
 		moveForward(1, 400);
 		// pushed in
 		moveForward(-0.5, 300);
@@ -325,15 +303,15 @@ void autonomous() {
 	}
 	else if (selector::auton == -2) { // red other goal
 		// at opposite goal but no AWP (USELESS)
-		cata_motors.move_relative(50, 100);
-		intake_motors.move_velocity(200);
+		cata_motor.move_relative(50, 100);
+		intake_motor.move_velocity(600);
 		moveForward(0.1, 100);
 		pros::c::delay(50);
 		moveForward(-2, 450);
 		turnRight(-45, 300);
 		right_wing.set_value(true);
 		moveForward(-1, 300);
-		intake_motors.move_velocity(-200);
+		intake_motor.move_velocity(-600);
 		turnRight(-45, 300);
 		right_wing.set_value(false);
 		moveForward(0.25, 400);
@@ -343,7 +321,7 @@ void autonomous() {
 		left_wing.set_value(false);
 		moveForward(0.5, 300);
 		turnRight(105, 300);
-		intake_motors.move_velocity(200);
+		intake_motor.move_velocity(600);
 		moveForward(2, 400);
 		moveForward(-0.5, 300);
 		turnRight(-100, 300);
@@ -353,7 +331,7 @@ void autonomous() {
 		moveForward(-1, 450);
 		moveForward(0.3, 300);
 		turnRight(180, 400);
-		intake_motors.move_velocity(-200);
+		intake_motor.move_velocity(-600);
 		moveForward(-0.5, 300);
 		moveForward(0.6, 300);
 		//end of auton path
@@ -390,7 +368,8 @@ void opcontrol() {
 
     	if (mainController.get_digital_new_press(DIGITAL_DOWN))
 		{
-			cata_motors.move_relative(-100, 100);
+			cata_motor.move_relative(-100, 100);
+			down_pressed = true;
 		}
 
 		if (mainController.get_digital_new_press(DIGITAL_X))
@@ -409,15 +388,15 @@ void opcontrol() {
 
 		if (mainController.get_digital(DIGITAL_L1))
 		{
-			intake_motors.move(127);
+			intake_motor.move(127);
 		}
 		else if (mainController.get_digital(DIGITAL_L2))
 		{
-			intake_motors.move(-127);
+			intake_motor.move(-127);
 		}
 		else
 		{
-			intake_motors.move(0);
+			intake_motor.move(0);
 		}
 
 		if (mainController.get_digital_new_press(DIGITAL_LEFT))
@@ -446,8 +425,8 @@ void opcontrol() {
 				right_wing_extended = true;
 			}
 		}
-		
-		printf("%d\n", cata_limit_switch.get_value());
-	    pros::c::delay(5);
+
+		pros::c::delay(5);
+		printf("%f\n", cata_motor.get_temperature());
 	}
 }
