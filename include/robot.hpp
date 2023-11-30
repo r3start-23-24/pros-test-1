@@ -16,6 +16,7 @@ extern pros::Motor cata_motor_1;
 extern pros::Motor cata_motor_2;
 extern pros::Motor_Group cata_motors;
 extern pros::ADIAnalogIn cata_limit_switch;
+extern pros::Rotation cata_rotation_sensor;
 
 extern pros::Motor intake_motor_1;
 extern pros::Motor intake_motor_2;

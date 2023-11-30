@@ -1,4 +1,5 @@
 #include "robot.hpp"
+#include "pros/rotation.hpp"
 
 pros::Controller mainController (pros::E_CONTROLLER_MASTER);
 
@@ -17,6 +18,7 @@ pros::ADIAnalogIn cata_limit_switch('A');
 pros::Motor intake_motor_1 (10, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor intake_motor_2 (7, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor_Group intake_motors ({intake_motor_1, intake_motor_2});
+pros::Rotation cata_rotation_sensor (1);
 
 pros::ADIDigitalOut left_wing (3);
 pros::ADIDigitalOut right_wing (2);
