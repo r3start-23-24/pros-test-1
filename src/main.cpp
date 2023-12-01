@@ -7,8 +7,6 @@
 #include "robot.hpp"
 #include "autoSelect/selection.h"
 
-bool down_pressed = false;
-
 const int oneTile = 1600;
 void moveForward(float tiles, int velocity) {
 	left_drive_motors.move_relative(tiles * oneTile, velocity);
@@ -41,7 +39,6 @@ void cata_down() {
 	cata_motor.brake();
 	pros::c::delay(50);
 	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-	down_pressed = false;
 }
 
 
@@ -350,13 +347,7 @@ void opcontrol() {
 	    left_drive_motors.move(left);
 		right_drive_motors.move(right);
 		// end drive
-
-    	if (mainController.get_digital_new_press(DIGITAL_DOWN))
-		{
-			cata_motor.move_relative(-100, 100);
-			down_pressed = true;
-		}
-
+		
 		if (mainController.get_digital_new_press(DIGITAL_X))
 		{
 			if (blocker_out)
