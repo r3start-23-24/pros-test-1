@@ -32,10 +32,12 @@ void turnRight(float degrees, int velocity) {
 void cata_down() {
 	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	cata_motor.move(127);
-	while (cata_rotation_sensor.get_angle() > 119 && cata_rotation_sensor.get_angle() < 121)
+	while (!(cata_rotation_sensor.get_angle() > 18450 && cata_rotation_sensor.get_angle() < 19450))
 	{
-		pros::c::delay(5);
+		pros::c::delay(1);
+		printf("%d\n", cata_rotation_sensor.get_angle());                                                                                                                                                                                                                                                      
 	}
+	cata_motor.move(0);
 	cata_motor.brake();
 	pros::c::delay(50);
 	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
@@ -347,7 +349,7 @@ void opcontrol() {
 	    left_drive_motors.move(left);
 		right_drive_motors.move(right);
 		// end drive
-		
+
 		if (mainController.get_digital_new_press(DIGITAL_X))
 		{
 			if (blocker_out)
@@ -403,6 +405,5 @@ void opcontrol() {
 		}
 
 		pros::c::delay(5);
-		printf("%f\n", cata_motor.get_temperature());
 	}
 }
