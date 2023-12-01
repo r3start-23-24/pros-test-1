@@ -34,15 +34,12 @@ void turnRight(float degrees, int velocity) {
 void cata_down() {
 	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	cata_motor.move(127);
-	while (cata_limit_switch.get_value_calibrated() < 25 || down_pressed)
+	while (cata_rotation_sensor.get_angle() > 119 && cata_rotation_sensor.get_angle() < 121)
 	{
-		pros::c::delay(2);
-	}
-	while (cata_limit_switch.get_value_calibrated() > 25 || down_pressed)
-	{
-		pros::c::delay(2);
+		pros::c::delay(5);
 	}
 	cata_motor.brake();
+	pros::c::delay(50);
 	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	down_pressed = false;
 }
@@ -63,20 +60,8 @@ void cata_thread() {
 		else {
 			if (pressingR1)
 			{
-				cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 				pressingR1 = false;
-				while (cata_limit_switch.get_value_calibrated() < 25 || down_pressed)
-				{
-					pros::c::delay(2);
-				}
-				pros::c::delay(200);
-				while (cata_limit_switch.get_value_calibrated() > 25 || down_pressed)
-				{
-					pros::c::delay(2);
-				}
-				cata_motor.brake();
-				cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-				down_pressed = false;
+				cata_down();
 			}
 		}
 		if (mainController.get_digital_new_press(DIGITAL_R2))
