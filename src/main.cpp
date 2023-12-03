@@ -29,10 +29,38 @@ void turnRight(float degrees, int velocity) {
 		pros::c::delay(5);
 	}
 }
+
+const int allowance = 500; // +/- 5 degrees
 void cata_down() {
 	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	cata_motor.move(127);
-	while (!(cata_rotation_sensor.get_angle() > 18450 && cata_rotation_sensor.get_angle() < 19450))
+	while (!(cata_rotation_sensor.get_angle() > 18950-allowance && cata_rotation_sensor.get_angle() < 18950+allowance))
+	{
+		pros::c::delay(1);
+		printf("%d\n", cata_rotation_sensor.get_angle());                                                                                                                                                                                                                                                      
+	}
+	cata_motor.move(0);
+	cata_motor.brake();
+	pros::c::delay(50);
+	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+}
+void cata_mid() {
+	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	cata_motor.move(127);
+	while (!(cata_rotation_sensor.get_angle() > 27500-allowance && cata_rotation_sensor.get_angle() < 27500+allowance))
+	{
+		pros::c::delay(1);
+		printf("%d\n", cata_rotation_sensor.get_angle());                                                                                                                                                                                                                                                      
+	}
+	cata_motor.move(0);
+	cata_motor.brake();
+	pros::c::delay(50);
+	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+}
+void cata_up() {
+	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	cata_motor.move(127);
+	while (!(cata_rotation_sensor.get_angle() > 35000-allowance && cata_rotation_sensor.get_angle() < 35000+allowance))
 	{
 		pros::c::delay(1);
 		printf("%d\n", cata_rotation_sensor.get_angle());                                                                                                                                                                                                                                                      
@@ -56,8 +84,7 @@ void cata_thread() {
 			cata_motor.move_velocity(100);
 			pressingR1 = true;
 		}
-		else {
-			if (pressingR1)
+		else if (pressingR1) {
 			{
 				pressingR1 = false;
 				cata_down();
@@ -65,7 +92,11 @@ void cata_thread() {
 		}
 		if (mainController.get_digital_new_press(DIGITAL_R2))
 		{
-			cata_down();
+			cata_mid();
+		}
+		if (mainController.get_digital_new_press(DIGITAL_B))
+		{
+			cata_up();
 		}
 		pros::c::delay(2);
 	}
