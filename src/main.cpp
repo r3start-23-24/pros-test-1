@@ -33,7 +33,7 @@ void turnRight(float degrees, int velocity) {
 const int allowance = 500; // +/- 5 degrees
 const int cata_down_pos = 18950;
 const int cata_mid_pos = 27500;
-const int cata_up_pos = 10000
+const int cata_up_pos = 10000;
 
 void cata_down() {
 	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
@@ -88,7 +88,7 @@ void cata_thread() {
 			cata_motor.move_velocity(100);
 			pressingR1 = true;
 		}
-		else if (pressingR1) {
+		else if (pressingR1)
 			{
 				pressingR1 = false;
 				cata_down();
