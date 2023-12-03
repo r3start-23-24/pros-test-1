@@ -89,10 +89,9 @@ void cata_thread() {
 			pressingR1 = true;
 		}
 		else if (pressingR1)
-			{
+		{
 				pressingR1 = false;
 				cata_down();
-			}
 		}
 		if (mainController.get_digital_new_press(DIGITAL_R2))
 		{
