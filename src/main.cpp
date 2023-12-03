@@ -31,10 +31,14 @@ void turnRight(float degrees, int velocity) {
 }
 
 const int allowance = 500; // +/- 5 degrees
+const int cata_down_pos = 18950;
+const int cata_mid_pos = 27500;
+const int cata_up_pos = 10000
+
 void cata_down() {
 	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	cata_motor.move(127);
-	while (!(cata_rotation_sensor.get_angle() > 18950-allowance && cata_rotation_sensor.get_angle() < 18950+allowance))
+	while (!(cata_rotation_sensor.get_angle() > cata_down_pos-allowance && cata_rotation_sensor.get_angle() < cata_down_pos+allowance))
 	{
 		pros::c::delay(1);
 		printf("%d\n", cata_rotation_sensor.get_angle());                                                                                                                                                                                                                                                      
@@ -47,7 +51,7 @@ void cata_down() {
 void cata_mid() {
 	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	cata_motor.move(127);
-	while (!(cata_rotation_sensor.get_angle() > 27500-allowance && cata_rotation_sensor.get_angle() < 27500+allowance))
+	while (!(cata_rotation_sensor.get_angle() > cata_mid_pos-allowance && cata_rotation_sensor.get_angle() < cata_mid_pos+allowance))
 	{
 		pros::c::delay(1);
 		printf("%d\n", cata_rotation_sensor.get_angle());                                                                                                                                                                                                                                                      
@@ -60,7 +64,7 @@ void cata_mid() {
 void cata_up() {
 	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	cata_motor.move(127);
-	while (!(cata_rotation_sensor.get_angle() > 35000-allowance && cata_rotation_sensor.get_angle() < 35000+allowance))
+	while (!(cata_rotation_sensor.get_angle() > cata_up_pos-allowance && cata_rotation_sensor.get_angle() < cata_up_pos+allowance))
 	{
 		pros::c::delay(1);
 		printf("%d\n", cata_rotation_sensor.get_angle());                                                                                                                                                                                                                                                      
