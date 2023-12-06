@@ -16,7 +16,7 @@ pros::Motor cata_motor (9, pros::E_MOTOR_GEARSET_36, true, pros::E_MOTOR_ENCODER
 pros::ADIAnalogIn cata_limit_switch('A');
 pros::Rotation cata_rotation_sensor (5);
 
-pros::Motor intake_motor (3, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor intake_motor (6, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES);
 
 pros::ADIDigitalOut left_wing (3);
 pros::ADIDigitalOut right_wing (2);
