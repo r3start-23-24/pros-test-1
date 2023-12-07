@@ -160,7 +160,7 @@ void disabled() {
 void competition_initialize() {}
 
 void autonomous() {
-	blocker.set_value(true);
+	// blocker.set_value(true);
 	if (selector::auton == 0) { // skills
 		/*/ cata down
 		pros::c::delay(100);
@@ -279,15 +279,8 @@ void autonomous() {
 	else if (selector::auton == 2) { // red other goal
 		// at opposite goal (AWP)
 		// off 28 - on 10
-		/*cata_motor.move(127);
-		while (cata_limit_switch.get_value_calibrated() > 25)
-		{
-			pros::c::delay(2);
-		}
-		cata_motor.move(-127);
-		pros::c::delay(500);
-		cata_motor.brake();
-		*/// cata 1 rotation code end
+
+		/* // below is the COV code
 		right_wing.set_value(true);
 		intake_motor.move(127);
 		moveForward(-0.4, 400);
@@ -318,6 +311,32 @@ void autonomous() {
 			pros::c::delay(5);
 		}
 		// end
+		*/
+
+		moveForward(2.5, 500);
+		left_wing.set_value(true);
+		turnRight(90, 300);
+		// not moving intake so alliance triball isn't launched over
+		moveForward(1.25, 600);
+		moveForward(-0.5, 300);
+		left_wing.set_value(false);
+		turnRight(180, 300);
+		moveForward(-0.7, 300); // straigten up
+		intake_motor.move_velocity(-600);
+		moveForward(1.5, 450);
+		// triball pushed in
+		moveForward(-0.5, 300);
+		turnRight(-90, 350);
+		moveForward(1, 400);
+		turnRight(60, 350);
+		right_wing.set_value(true);
+		moveForward(0.75, 300);
+		turnRight(-150, 350);
+		moveForward(0.5, 400);
+		right_wing.set_value(false);
+		moveForward(1.5, 500);
+		// done
+		
 	}
 	else if (selector::auton == -2) { // red other goal
 		// at opposite goal but no AWP (USELESS)
