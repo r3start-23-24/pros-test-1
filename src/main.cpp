@@ -160,7 +160,7 @@ void disabled() {
 void competition_initialize() {}
 
 void autonomous() {
-	// blocker.set_value(true);
+	blocker.set_value(true);
 	if (selector::auton == 0) { // skills
 		/*/ cata down
 		pros::c::delay(100);
@@ -313,28 +313,56 @@ void autonomous() {
 		// end
 		*/
 
-		moveForward(2.5, 500);
-		left_wing.set_value(true);
-		turnRight(90, 300);
-		// not moving intake so alliance triball isn't launched over
-		moveForward(1.25, 600);
+		// start
+		cata_mid();
+		moveForward(1.7, 500);
+		turnRight(-90, 300);
+		intake_motor.move_velocity(-600);
+		moveForward(0.75, 450);
+		// triball pushed in
+		//moveForward(-0.7, 400);
+
+		// arc start
+		left_drive_motors.move_relative(0.25 * oneTile, 100);
+		right_drive_motors.move_relative(1 * oneTile, 400);
+		pros::c::delay(100);
+		while (right_motor_1.get_actual_velocity() != 0)
+		{
+			pros::c::delay(5);
+		}
+		// arc end
+
+		intake_motor.move_velocity(600);
+		turnRight(100, 400);
+		moveForward(0.25, 550);
+		
+		moveForward(-0.25, 550);
+		turnRight(80, 400);
+		intake_motor.move_velocity(-600);
+		moveForward(1, 550);
+		// not tuned from now on
+		/*
+		moveForward(-0.5, 550);
+		turnRight(-50, 400);
+		intake_motor.move_velocity(600);
+		moveForward(0.3, 550);
+		moveForward(-0.3, 550);
+		turnRight(50, 400);
+		intake_motor.move_velocity(-600);
+		moveForward(0.5, 550);
+		*/
+		// balls pushed over
+		/*
 		moveForward(-0.5, 300);
 		left_wing.set_value(false);
-		turnRight(180, 300);
-		moveForward(-0.7, 300); // straigten up
-		intake_motor.move_velocity(-600);
-		moveForward(1.5, 450);
-		// triball pushed in
-		moveForward(-0.5, 300);
-		turnRight(-90, 350);
-		moveForward(1, 400);
-		turnRight(60, 350);
+		turnRight(155, 350);
+		moveForward(2.5, 400);
 		right_wing.set_value(true);
-		moveForward(0.75, 300);
 		turnRight(-150, 350);
 		moveForward(0.5, 400);
 		right_wing.set_value(false);
 		moveForward(1.5, 500);
+		*/
 		// done
 		
 	}
