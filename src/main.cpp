@@ -183,26 +183,26 @@ void autonomous() {
 			pros::c::delay(5);
 		}
 		// end
-		cata_motor.move_velocity(90); // speed of cata can be changed here
+		cata_motor.move_velocity(80); // speed of cata can be changed here
 		pros::c::delay(35000); // time shooting can be changed here
 		cata_motor.brake();
 		// change from here down
-		turnRight(-50, 200);
+		turnRight(-60, 200);
 		blocker.set_value(false);
 		moveForward(-1, 600);
 		pros::c::delay(100);
 		turnRight(20, 200);
 		moveForward(-3, 600);
-		turnRight(90, 200);
+		turnRight(-90, 200);
 		right_wing.set_value(true);
 		left_wing.set_value(true);
-		moveForward(-1.2, 500);
+		moveForward(1.2, 500);
+		turnRight(-95, 200);
+		moveForward(1.2, 600);
 		right_wing.set_value(false);
 		left_wing.set_value(false);
-		turnRight(-95, 200);
-		moveForward(-1.2, 600);
-		turnRight(-90, 200);
-		moveForward(-1, 600);
+		turnRight(90, 200);
+		moveForward(1, 600);
 		right_wing.set_value(true);
 		left_wing.set_value(true);
 		turnRight(-100, 200);
@@ -337,7 +337,11 @@ void autonomous() {
 		right_wing.set_value(false);
 		intake_motor.move_velocity(-600);
 		left_wing.set_value(true);
-		moveForward(1.6, 300);
+		moveForward(0.3, 200);
+		turnRight(20, 200);
+		moveForward(0.2, 200);
+		turnRight(-20, 200);
+		moveForward(1.11, 300);
 
 	}
 }
