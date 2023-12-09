@@ -146,6 +146,8 @@ void initialize() {
 	cata_motor.set_brake_mode(MOTOR_BRAKE_COAST);
 	cata_limit_switch.calibrate();
 	intake_motor.set_brake_mode(MOTOR_BRAKE_BRAKE);
+	left_drive_motors.set_brake_modes(MOTOR_BRAKE_COAST);
+	right_drive_motors.set_brake_modes(MOTOR_BRAKE_COAST);
 
 	pros::Task cata(cata_thread);
 	//pros::Task cata_two(up_button_thread);
@@ -315,91 +317,72 @@ void autonomous() {
 
 		// start
 		cata_mid();
-		moveForward(1.7, 500);
-		turnRight(-90, 300);
+		moveForward(1.8, 500);
+		turnRight(-100, 300);
 		intake_motor.move_velocity(-600);
-		moveForward(0.75, 450);
+		moveForward(0.35, 250);
 		// triball pushed in
-		//moveForward(-0.7, 400);
-
+		pros::c::delay(300); // for consistency
+		moveForward(-0.35, 400);
 		// arc start
-		left_drive_motors.move_relative(0.25 * oneTile, 100);
-		right_drive_motors.move_relative(1 * oneTile, 400);
+		left_drive_motors.move_relative(-0.2 * oneTile, 100);
+		right_drive_motors.move_relative(-0.8 * oneTile, 400);
 		pros::c::delay(100);
 		while (right_motor_1.get_actual_velocity() != 0)
 		{
 			pros::c::delay(5);
 		}
 		// arc end
-
 		intake_motor.move_velocity(600);
-		turnRight(100, 400);
-		moveForward(0.25, 550);
-		
-		moveForward(-0.25, 550);
-		turnRight(80, 400);
-		intake_motor.move_velocity(-600);
-		moveForward(1, 550);
-		// not tuned from now on
-		/*
-		moveForward(-0.5, 550);
-		turnRight(-50, 400);
-		intake_motor.move_velocity(600);
-		moveForward(0.3, 550);
+		moveForward(0.35, 550);
+		// picked up ball
 		moveForward(-0.3, 550);
-		turnRight(50, 400);
+		turnRight(100, 400);
 		intake_motor.move_velocity(-600);
-		moveForward(0.5, 550);
-		*/
-		// balls pushed over
-		/*
+		pros::c::delay(250);
+		moveForward(0.05, 550);
+		// ball 1 pushed over
+		// arc start
+		left_drive_motors.move_relative(-0.4 * oneTile, 450);
+		right_drive_motors.move_relative(-0.1 * oneTile, 150);
+		pros::c::delay(100);
+		while (left_motor_1.get_actual_velocity() != 0)
+		{
+			pros::c::delay(5);
+		}
+		// arc end
+		intake_motor.move_velocity(600);
+		moveForward(0.6, 550);
+		moveForward(-0.4, 550);
+		turnRight(45, 400);
+		intake_motor.move_velocity(-600);
+		pros::c::delay(250);
+		moveForward(0.2, 550);
+		// ball 2 pushed over
 		moveForward(-0.5, 300);
-		left_wing.set_value(false);
-		turnRight(155, 350);
-		moveForward(2.5, 400);
+		turnRight(120, 350);
+		moveForward(1, 500);
+		moveForward(0.5, 100); // continue but SLOW
 		right_wing.set_value(true);
-		turnRight(-150, 350);
+		turnRight(-145, 500);
 		moveForward(0.5, 400);
 		right_wing.set_value(false);
-		moveForward(1.5, 500);
-		*/
+		moveForward(1, 400);
 		// done
-		
 	}
 	else if (selector::auton == -2) { // red other goal
-		// at opposite goal but no AWP (USELESS)
-		cata_motor.move_relative(50, 100);
-		intake_motor.move_velocity(600);
-		moveForward(0.1, 100);
-		pros::c::delay(50);
-		moveForward(-2, 450);
-		turnRight(-45, 300);
+		// AWP CODE
+		// start
+		moveForward(-1.5, 600);
+		moveForward(0.5, 200);
 		right_wing.set_value(true);
-		moveForward(-1, 300);
-		intake_motor.move_velocity(-600);
-		turnRight(-45, 300);
+		moveForward(0.5, 200);
+		turnRight(-83, 450);
 		right_wing.set_value(false);
-		moveForward(0.25, 400);
-		turnRight(180, 350);
-		left_wing.set_value(true);
-		moveForward(-0.25, 400);
-		left_wing.set_value(false);
-		moveForward(0.5, 300);
-		turnRight(105, 300);
-		intake_motor.move_velocity(600);
-		moveForward(2, 400);
-		moveForward(-0.5, 300);
-		turnRight(-100, 300);
-		right_wing.set_value(true);
-		moveForward(-1.25, 400);
-		turnRight(20, 300);
-		moveForward(-1, 450);
-		moveForward(0.3, 300);
-		turnRight(180, 400);
 		intake_motor.move_velocity(-600);
-		moveForward(-0.5, 300);
-		moveForward(0.6, 300);
-		//end of auton path
+		left_wing.set_value(true);
+		moveForward(1.6, 300);
+		
 	}
 }
 
@@ -447,11 +430,11 @@ void opcontrol() {
 
 		if (mainController.get_digital(DIGITAL_L1))
 		{
-			intake_motor.move(127);
+			intake_motor.move(-127);
 		}
 		else if (mainController.get_digital(DIGITAL_L2))
 		{
-			intake_motor.move(-127);
+			intake_motor.move(127);
 		}
 		else
 		{
