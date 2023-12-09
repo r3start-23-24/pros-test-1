@@ -339,9 +339,9 @@ void autonomous() {
 		left_wing.set_value(true);
 		moveForward(0.3, 200);
 		turnRight(20, 200);
-		moveForward(0.2, 200);
+		moveForward(0.5, 200);
 		turnRight(-20, 200);
-		moveForward(1.11, 300);
+		moveForward(0.83, 300);
 
 	}
 }
