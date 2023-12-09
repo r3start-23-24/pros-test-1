@@ -14,7 +14,7 @@
 
 //selector configuration
 #define HUE 360
-#define DEFAULT 2
+#define DEFAULT -2
 #define AUTONS "same goal", "other goal", "nothing"
 // 1, 2, 3
 
