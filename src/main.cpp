@@ -164,17 +164,6 @@ void competition_initialize() {}
 void autonomous() {
 	blocker.set_value(true);
 	if (selector::auton == 0) { // skills
-		/*/ cata down
-		pros::c::delay(100);
-		cata_motor.move_velocity(70);
-		while (cata_limit_switch.get_value_calibrated() > 25)
-		{
-			pros::c::delay(2);
-		}
-		pros::c::delay(250);
-		cata_motor.brake();
-		*/// end cata down
-
 		// start of drift DO NOT TOUCH
 		left_drive_motors.move_relative(1.5 * 1600, 250);
 		right_drive_motors.move_relative(0.48 * 1600, 100);
@@ -194,7 +183,7 @@ void autonomous() {
 			pros::c::delay(5);
 		}
 		// end
-		cata_motor.move_velocity(100); // speed of cata can be changed here
+		cata_motor.move_velocity(90); // speed of cata can be changed here
 		pros::c::delay(35000); // time shooting can be changed here
 		cata_motor.brake();
 		// change from here down
@@ -210,7 +199,7 @@ void autonomous() {
 		moveForward(-1.2, 500);
 		right_wing.set_value(false);
 		left_wing.set_value(false);
-		turnRight(95, 200);
+		turnRight(-95, 200);
 		moveForward(-1.2, 600);
 		turnRight(-90, 200);
 		moveForward(-1, 600);
@@ -282,39 +271,6 @@ void autonomous() {
 		// at opposite goal (AWP)
 		// off 28 - on 10
 
-		/* // below is the COV code
-		right_wing.set_value(true);
-		intake_motor.move(127);
-		moveForward(-0.4, 400);
-		pros::c::delay(100);
-		right_wing.set_value(false);
-		intake_motor.move(0);
-		turnRight(-90, 300);
-		moveForward(1, 300);
-		turnRight(-45, 300);
-		moveForward(0.8, 400);
-		// turn towards goal
-		turnRight(-100, 300);
-		intake_motor.move(-127);
-		moveForward(1, 400);
-		// pushed in
-		moveForward(-0.5, 300);
-		moveForward(0.5, 500);
-		// pushed in x2
-		moveForward(-0.5, 300);
-		right_wing.set_value(true);
-		turnRight(65, 300);
-		moveForward(-1.5, 300);
-		// just move left side of drive
-		left_drive_motors.move_relative(0.15 * oneTile, 100);
-		pros::c::delay(100);
-		while (left_motor_1.get_actual_velocity() != 0)
-		{
-			pros::c::delay(5);
-		}
-		// end
-		*/
-
 		// start
 		cata_mid();
 		moveForward(1.8, 500);
@@ -382,12 +338,13 @@ void autonomous() {
 		intake_motor.move_velocity(-600);
 		left_wing.set_value(true);
 		moveForward(1.6, 300);
-		
+
 	}
 }
 
 void opcontrol() {
-	pros::Task gifs(gifthread);
+	blocker.set_value(true);
+	//pros::Task gifs(gifthread);
 
 	bool left_wing_extended = false;
 	bool right_wing_extended = false;
@@ -413,20 +370,6 @@ void opcontrol() {
 	    left_drive_motors.move(left);
 		right_drive_motors.move(right);
 		// end drive
-
-		if (mainController.get_digital_new_press(DIGITAL_X))
-		{
-			if (blocker_out)
-			{
-				blocker.set_value(false);
-				blocker_out = false;
-			}
-			else
-			{
-				blocker.set_value(true);
-				blocker_out = true;
-			}
-		}
 
 		if (mainController.get_digital(DIGITAL_L1))
 		{
