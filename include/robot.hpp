@@ -2,6 +2,7 @@
 
 #include "api.h"
 #include "pros/motors.hpp"
+#include "lemlib/api.hpp"
 
 extern pros::Controller mainController;
 
@@ -24,6 +25,10 @@ extern pros::ADIDigitalOut left_wing;
 extern pros::ADIDigitalOut right_wing;
 
 extern pros::ADIDigitalOut blocker;
+
+extern pros::Imu inertial_sensor;
+
+extern lemlib::Chassis lemlib_chassis;
 
 #define ROBOT_HPP
 #endif

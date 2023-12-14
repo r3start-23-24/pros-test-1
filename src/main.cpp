@@ -6,6 +6,7 @@
 #include "pros/rtos.hpp"
 #include "robot.hpp"
 #include "autoSelect/selection.h"
+#include "lemlib/api.hpp"
 
 const int oneTile = 1600;
 void moveForward(float tiles, int velocity) {
@@ -141,6 +142,7 @@ void gifthread() {
 }
 
 void initialize() {
+	lemlib_chassis.calibrate();
 	selector::init();
 
 	cata_motor.set_brake_mode(MOTOR_BRAKE_COAST);
