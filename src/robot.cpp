@@ -31,9 +31,9 @@ pros::Imu inertial_sensor(6); // change port
 lemlib::Drivetrain_t lemlib_drive {
     &left_drive_motors,
     &right_drive_motors,
-    10, // track width
-    3.25, // wheel diameter
-    360 // wheel rpm
+    11.25, // track width
+    4, // wheel diameter
+    257 // wheel rpm
 };
 
 lemlib::OdomSensors_t lemlib_sensors {
