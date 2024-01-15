@@ -377,6 +377,22 @@ void opcontrol() {
 		right_drive_motors.move(right);
 		// end drive
 
+		// new puncher code
+		if (mainController.get_digital(DIGITAL_UP))
+		{
+			cata_motor.move_velocity(100);
+		}
+		else if (mainController.get_digital(DIGITAL_DOWN))
+		{
+			cata_motor.move_velocity(-100);
+		}
+		else
+		{
+			cata_motor.brake();
+			cata_motor.move_velocity(0);
+		}
+
+		// end new puncher code
 		if (mainController.get_digital(DIGITAL_L1))
 		{
 			intake_motor.move(-127);
