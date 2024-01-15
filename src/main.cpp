@@ -264,11 +264,11 @@ void opcontrol() {
 		// end drive
 
 		// new puncher code
-		if (mainController.get_digital(DIGITAL_UP) || mainController.get_digital(DIGITAL_R1))
+		if (mainController.get_digital(DIGITAL_UP))
 		{
 			cata_motor.move_velocity(100);
 		}
-		else if (mainController.get_digital(DIGITAL_DOWN))
+		else if (mainController.get_digital(DIGITAL_DOWN) || mainController.get_digital(DIGITAL_R1))
 		{
 			cata_motor.move_velocity(-100);
 		}
