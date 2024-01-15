@@ -13,9 +13,9 @@ pros::Motor right_motor_3 (20, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENC
 pros::Motor_Group left_drive_motors ({left_motor_1, left_motor_2, left_motor_3});
 pros::Motor_Group right_drive_motors ({right_motor_1, right_motor_2, right_motor_3});
 
-pros::Motor cata_motor (9, pros::E_MOTOR_GEARSET_36, true, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor cata_motor (17, pros::E_MOTOR_GEARSET_36, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::ADIAnalogIn cata_limit_switch('A');
-pros::Rotation cata_rotation_sensor (5);
+pros::Rotation cata_rotation_sensor (15);
 
 pros::Motor intake_motor (14, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
 
@@ -24,7 +24,7 @@ pros::ADIDigitalOut right_wing (2);
 
 pros::ADIDigitalOut blocker (4);
 
-pros::Imu inertial_sensor(6); // change port
+pros::Imu inertial_sensor(16); // change port
 
 // lemlib below
 
