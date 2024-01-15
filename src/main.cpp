@@ -31,101 +31,6 @@ void turnRight(float degrees, int velocity) {
 	}
 }
 
-const int allowance = 500; // +/- 5 degrees
-const int cata_down_pos = 18950;
-const int cata_mid_pos = 27500;
-const int cata_up_pos = 10000;
-
-void cata_down() {
-	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-	cata_motor.move(127);
-	while (!(cata_rotation_sensor.get_angle() > cata_down_pos-allowance && cata_rotation_sensor.get_angle() < cata_down_pos+allowance))
-	{
-		pros::c::delay(1);
-		printf("%d\n", cata_rotation_sensor.get_angle());                                                                                                                                                                                                                                                      
-	}
-	cata_motor.move(0);
-	cata_motor.brake();
-	pros::c::delay(50);
-	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-}
-void cata_mid() {
-	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-	cata_motor.move(127);
-	while (!(cata_rotation_sensor.get_angle() > cata_mid_pos-allowance && cata_rotation_sensor.get_angle() < cata_mid_pos+allowance))
-	{
-		pros::c::delay(1);
-		printf("%d\n", cata_rotation_sensor.get_angle());                                                                                                                                                                                                                                                      
-	}
-	cata_motor.move(0);
-	cata_motor.brake();
-	pros::c::delay(50);
-	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-}
-void cata_up() {
-	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-	cata_motor.move(127);
-	while (!(cata_rotation_sensor.get_angle() > cata_up_pos-allowance && cata_rotation_sensor.get_angle() < cata_up_pos+allowance))
-	{
-		pros::c::delay(1);
-		printf("%d\n", cata_rotation_sensor.get_angle());                                                                                                                                                                                                                                                      
-	}
-	cata_motor.move(0);
-	cata_motor.brake();
-	pros::c::delay(50);
-	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-}
-
-
-void cata_thread() {
-	bool pressingR1 = false;
-	// off bumper 28
-	// on bumper 10
-	while (true)
-	{
-		if (mainController.get_digital(DIGITAL_R1))
-		{
-			// cata shoot constantly
-			cata_motor.move_velocity(100);
-			pressingR1 = true;
-		}
-		else if (pressingR1)
-		{
-				pressingR1 = false;
-				cata_down();
-		}
-		if (mainController.get_digital_new_press(DIGITAL_R2))
-		{
-			cata_mid();
-		}
-		if (mainController.get_digital_new_press(DIGITAL_B))
-		{
-			cata_up();
-		}
-		pros::c::delay(2);
-	}
-}
-void up_button_thread() {
-	bool on = false;
-	while (true)
-	{
-		if (mainController.get_digital_new_press(DIGITAL_UP))
-		{
-			if (on)
-			{
-				cata_motor.move_velocity(0);
-				cata_motor.brake();
-				on = false;
-			}
-			else
-			{
-				cata_motor.move_velocity(100);
-				on = true;
-			}
-		}
-		pros::c::delay(2);
-	}
-}
 void gifthread() {
 	while (true)
 	{
@@ -146,14 +51,9 @@ void initialize() {
 	selector::init();
 
 	cata_motor.set_brake_mode(MOTOR_BRAKE_COAST);
-	cata_limit_switch.calibrate();
 	intake_motor.set_brake_mode(MOTOR_BRAKE_BRAKE);
 	left_drive_motors.set_brake_modes(MOTOR_BRAKE_COAST);
 	right_drive_motors.set_brake_modes(MOTOR_BRAKE_COAST);
-
-	pros::Task cata(cata_thread);
-	//pros::Task cata_two(up_button_thread);
-	//pros::Task gifs(gifthread);
 }
 
 void disabled() {
@@ -212,21 +112,7 @@ void autonomous() {
 		moveForward(1.4, 600);
 		moveForward(-1.4, 600);
 	}
-	else if (selector::auton == 1) { // red same goal
-		// off 28
-		// on 10
-		//right_wing.set_value(true);
-		/*cata_motor.move(127);
-		while (cata_limit_switch.get_value_calibrated() > 25)
-		{
-			pros::c::delay(2);
-		}
-		cata_motor.move(-127);
-		pros::c::delay(500);
-		cata_motor.brake();
-		*/// cata 1 rotation code end
-		//pros::c::delay(1000); // instead of cata thing
-		//right_wing.set_value(false);
+	else if (selector::auton == 1) { // red same goal	
 		intake_motor.move_velocity(600);
 		moveForward(1, 500);
 		pros::c::delay(150);
@@ -274,7 +160,7 @@ void autonomous() {
 		// off 28 - on 10
 
 		// start
-		cata_mid();
+		//cata_mid();
 		moveForward(1.8, 500);
 		turnRight(-100, 300);
 		intake_motor.move_velocity(-600);
@@ -380,11 +266,11 @@ void opcontrol() {
 		// new puncher code
 		if (mainController.get_digital(DIGITAL_UP))
 		{
-			cata_motor.move_velocity(-100);
+			cata_motor.move_velocity(100);
 		}
 		else if (mainController.get_digital(DIGITAL_DOWN))
 		{
-			cata_motor.move_velocity(100);
+			cata_motor.move_velocity(-100);
 		}
 		else
 		{
