@@ -266,11 +266,11 @@ void opcontrol() {
 		// new puncher code
 		if (mainController.get_digital(DIGITAL_UP))
 		{
-			cata_motor.move_velocity(75);
+			cata_motor.move_velocity(100);
 		}
 		else if (mainController.get_digital(DIGITAL_DOWN) || mainController.get_digital(DIGITAL_R1))
 		{
-			cata_motor.move_velocity(-75);
+			cata_motor.move_velocity(-100);
 		}
 		else
 		{
