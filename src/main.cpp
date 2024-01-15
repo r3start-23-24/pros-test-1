@@ -264,7 +264,7 @@ void opcontrol() {
 		// end drive
 
 		// new puncher code
-		if (mainController.get_digital(DIGITAL_UP))
+		if (mainController.get_digital(DIGITAL_UP) || mainController.get_digital(DIGITAL_R1))
 		{
 			cata_motor.move_velocity(100);
 		}
