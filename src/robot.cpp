@@ -54,8 +54,8 @@ lemlib::ChassisController_t regular_pid {
     5 // slew rate
 };
 lemlib::ChassisController_t turn_pid {
-    4, // kP
-    40, // kD
+    7, // kP 6
+    45, // kD 44
     1, // smallErrorRange
     100, // smallErrorTimeout
     3, // largeErrorRange
