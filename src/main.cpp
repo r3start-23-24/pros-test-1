@@ -67,10 +67,14 @@ void competition_initialize() {}
 void autonomous() {
 	lemlib_chassis.calibrate();
     lemlib_chassis.setPose(0,0,0);
-    lemlib_chassis.turnTo(30,0,1000);
+    lemlib_chassis.turnTo(30,0,2000);
 }
 
 void opcontrol() {
+	lemlib_chassis.calibrate();
+    lemlib_chassis.setPose(0,0,0);
+    lemlib_chassis.turnTo(30,0,2000);
+	
 	blocker.set_value(true);
 	//pros::Task gifs(gifthread);
 
