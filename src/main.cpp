@@ -8,6 +8,10 @@
 #include "autoSelect/selection.h"
 #include "lemlib/api.hpp"
 
+bool left_wing_extended = false;
+bool right_wing_extended = false;
+bool blocker_out = false;
+
 const int oneTile = 1600;
 void moveForward(float tiles, int velocity) {
 	left_drive_motors.move_relative(tiles * oneTile, velocity);
@@ -70,6 +74,81 @@ void autonomous() {
     lemlib_chassis.turnTo(30,0,2000);
 }
 
+void drive_loop() {
+    int power = mainController.get_analog(ANALOG_LEFT_Y);
+	int turn = pow(2, (log(108)/(127*log(2))) * abs(mainController.get_analog(ANALOG_RIGHT_X))) + 19;
+	if (mainController.get_analog(ANALOG_RIGHT_X) < 2 && mainController.get_analog(ANALOG_RIGHT_X) > -2)
+	{
+		turn = 0;
+	}
+	if (mainController.get_analog(ANALOG_RIGHT_X) < 0)
+	{
+		turn *= -1;
+	}
+	int left = power + turn;
+	int right = power - turn;
+	left_drive_motors.move(left);
+	right_drive_motors.move(right);
+}
+void regular_loop() {
+	// new puncher code
+	if (mainController.get_digital(DIGITAL_UP))
+	{
+		cata_motor.move_velocity(100);
+	}
+	else if (mainController.get_digital(DIGITAL_DOWN) || mainController.get_digital(DIGITAL_R1))
+	{
+		cata_motor.move_velocity(-100);
+	}
+	else
+	{
+		cata_motor.brake();
+		cata_motor.move_velocity(0);
+	}
+	// end new puncher code
+	if (mainController.get_digital(DIGITAL_L1))
+	{
+		intake_motor.move(-127);
+	}
+	else if (mainController.get_digital(DIGITAL_L2))
+	{
+		intake_motor.move(127);
+	}
+	else
+	{
+		intake_motor.move(0);
+	}
+	if (mainController.get_digital_new_press(DIGITAL_LEFT))
+	{
+		if (left_wing_extended)
+		{
+			left_wing.set_value(false);
+			left_wing_extended = false;
+		}
+		else
+		{
+			left_wing.set_value(true);
+			left_wing_extended = true;
+		}
+	}
+	else if (mainController.get_digital_new_press(DIGITAL_RIGHT))
+	{
+		if (right_wing_extended)
+		{
+			right_wing.set_value(false);
+			right_wing_extended = false;
+		}
+		else
+		{
+			right_wing.set_value(true);
+			right_wing_extended = true;
+		}
+	}
+}
+void shifted_loop() {
+
+}
+
 void opcontrol() {
 	lemlib_chassis.calibrate();
     lemlib_chassis.setPose(0,0,0);
@@ -78,87 +157,12 @@ void opcontrol() {
 	blocker.set_value(true);
 	//pros::Task gifs(gifthread);
 
-	bool left_wing_extended = false;
-	bool right_wing_extended = false;
-	bool blocker_out = false;
-
 	pros::c::delay(500);
 	//cata_down();
 
 	while (true) {
-		// drive
-    	int power = mainController.get_analog(ANALOG_LEFT_Y);
-	    int turn = pow(2, (log(108)/(127*log(2))) * abs(mainController.get_analog(ANALOG_RIGHT_X))) + 19;
-		if (mainController.get_analog(ANALOG_RIGHT_X) < 2 && mainController.get_analog(ANALOG_RIGHT_X) > -2)
-		{
-			turn = 0;
-		}
-		if (mainController.get_analog(ANALOG_RIGHT_X) < 0)
-		{
-			turn *= -1;
-		}
-	    int left = power + turn;
-	    int right = power - turn;
-	    left_drive_motors.move(left);
-		right_drive_motors.move(right);
-		// end drive
-
-		// new puncher code
-		if (mainController.get_digital(DIGITAL_UP))
-		{
-			cata_motor.move_velocity(100);
-		}
-		else if (mainController.get_digital(DIGITAL_DOWN) || mainController.get_digital(DIGITAL_R1))
-		{
-			cata_motor.move_velocity(-100);
-		}
-		else
-		{
-			cata_motor.brake();
-			cata_motor.move_velocity(0);
-		}
-		// end new puncher code
-
-		if (mainController.get_digital(DIGITAL_L1))
-		{
-			intake_motor.move(-127);
-		}
-		else if (mainController.get_digital(DIGITAL_L2))
-		{
-			intake_motor.move(127);
-		}
-		else
-		{
-			intake_motor.move(0);
-		}
-
-		if (mainController.get_digital_new_press(DIGITAL_LEFT))
-		{
-			if (left_wing_extended)
-			{
-				left_wing.set_value(false);
-				left_wing_extended = false;
-			}
-			else
-			{
-				left_wing.set_value(true);
-				left_wing_extended = true;
-			}
-		}
-		else if (mainController.get_digital_new_press(DIGITAL_RIGHT))
-		{
-			if (right_wing_extended)
-			{
-				right_wing.set_value(false);
-				right_wing_extended = false;
-			}
-			else
-			{
-				right_wing.set_value(true);
-				right_wing_extended = true;
-			}
-		}
-
+		drive_loop();
+		mainController.get_digital(DIGITAL_R2) ? shifted_loop() : regular_loop();
 		pros::c::delay(5);
 	}
 }
