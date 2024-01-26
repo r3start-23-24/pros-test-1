@@ -45,8 +45,8 @@ lemlib::OdomSensors_t lemlib_sensors {
 
 // forward/backward PID
 lemlib::ChassisController_t regular_pid {
-    8, // kP
-    30, // kD
+    35, // kP 8
+    35, // kD
     1, // smallErrorRange
     100, // smallErrorTimeout
     3, // largeErrorRange
@@ -54,8 +54,8 @@ lemlib::ChassisController_t regular_pid {
     5 // slew rate
 };
 lemlib::ChassisController_t turn_pid {
-    7, // kP 6
-    87, // kD 44
+    9, // kP 8
+    70, // kD 65
     1, // smallErrorRange
     100, // smallErrorTimeout
     3, // largeErrorRange

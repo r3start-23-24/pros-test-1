@@ -73,7 +73,7 @@ void autonomous() {
 void opcontrol() {
 	lemlib_chassis.calibrate();
     lemlib_chassis.setPose(0,0,0);
-    lemlib_chassis.turnTo(30,0,2000);
+    lemlib_chassis.moveTo(0,25,2000);
 	
 	blocker.set_value(true);
 	//pros::Task gifs(gifthread);
