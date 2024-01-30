@@ -8,9 +8,10 @@
 #include "autoSelect/selection.h"
 #include "lemlib/api.hpp"
 
-bool left_wing_extended = false;
-bool right_wing_extended = false;
-bool blocker_out = false;
+bool front_left_wing_extended = false;
+bool front_right_wing_extended = false;
+bool back_left_wing_extended = false;
+bool back_right_wing_extended = false;
 
 const int oneTile = 1600;
 void moveForward(float tiles, int velocity) {
@@ -96,10 +97,15 @@ void regular_loop() {
 	{
 		cata_motor.move_velocity(100);
 	}
-	else if (mainController.get_digital(DIGITAL_DOWN) || mainController.get_digital(DIGITAL_R1))
+	else if (mainController.get_digital(DIGITAL_R1))
 	{
 		cata_motor.move_velocity(-100);
 	}
+    else if (mainController.get_digital(DIGITAL_DOWN))
+    {
+        // pto pulled to hang
+        cata_motor.move_velocity(-100);
+    }
 	else
 	{
 		cata_motor.brake();
@@ -120,33 +126,69 @@ void regular_loop() {
 	}
 	if (mainController.get_digital_new_press(DIGITAL_LEFT))
 	{
-		if (left_wing_extended)
+		if (front_left_wing_extended)
 		{
-			left_wing.set_value(false);
-			left_wing_extended = false;
+			front_left_wing.set_value(false);
+			front_left_wing_extended = false;
 		}
 		else
 		{
-			left_wing.set_value(true);
-			left_wing_extended = true;
+			front_left_wing.set_value(true);
+			front_left_wing_extended = true;
 		}
 	}
 	else if (mainController.get_digital_new_press(DIGITAL_RIGHT))
 	{
-		if (right_wing_extended)
+		if (front_right_wing_extended)
 		{
-			right_wing.set_value(false);
-			right_wing_extended = false;
+			front_right_wing.set_value(false);
+			front_right_wing_extended = false;
 		}
 		else
 		{
-			right_wing.set_value(true);
-			right_wing_extended = true;
+			front_right_wing.set_value(true);
+			front_right_wing_extended = true;
 		}
 	}
 }
 void shifted_loop() {
+    if (mainController.get_digital_new_press(DIGITAL_LEFT))
+	{
+		if (back_left_wing_extended)
+		{
+			back_left_wing.set_value(false);
+			back_left_wing_extended = false;
+		}
+		else
+		{
+			back_left_wing.set_value(true);
+			back_left_wing_extended = true;
+		}
+	}
+	else if (mainController.get_digital_new_press(DIGITAL_RIGHT))
+	{
+		if (back_right_wing_extended)
+		{
+			back_right_wing.set_value(false);
+			back_right_wing_extended = false;
+		}
+		else
+		{
+			back_right_wing.set_value(true);
+			back_right_wing_extended = true;
+		}
+	}
 
+    if (mainController.get_digital_new_press(DIGITAL_L1))
+    {
+        // pto shift pull (blocker)
+        // rotate to block point lol
+    }
+    if (mainController.get_digital_new_press(DIGITAL_L2))
+    {
+        // pto shift pull (blocker)
+        // rotate to hang up point lol
+    }
 }
 
 void opcontrol() {
@@ -154,7 +196,6 @@ void opcontrol() {
     lemlib_chassis.setPose(0,0,0);
     lemlib_chassis.moveTo(0,25,2000);
 	
-	blocker.set_value(true);
 	//pros::Task gifs(gifthread);
 
 	pros::c::delay(500);
