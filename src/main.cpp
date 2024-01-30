@@ -150,6 +150,15 @@ void regular_loop() {
 			front_right_wing_extended = true;
 		}
 	}
+
+    if (mainController.get_digital_new_press(DIGITAL_X))
+    {
+        // toggle front wing
+    }
+    else if (mainController.get_digital_new_press(DIGITAL_X))
+    {
+        // toggle back wing
+    }
 }
 void shifted_loop() {
     if (mainController.get_digital_new_press(DIGITAL_LEFT))
@@ -184,10 +193,25 @@ void shifted_loop() {
         // pto shift pull (blocker)
         // rotate to block point lol
     }
-    if (mainController.get_digital_new_press(DIGITAL_L2))
+    else if (mainController.get_digital_new_press(DIGITAL_L2))
     {
         // pto shift pull (blocker)
         // rotate to hang up point lol
+    }
+
+    if (mainController.get_digital_new_press(DIGITAL_DOWN))
+    {
+        // pto shift pull (blocker)
+        // rotate to bottom point lol
+    }
+
+    if (mainController.get_digital_new_press(DIGITAL_UP))
+    {
+        front_left_wing.set_value(true);
+        front_right_wing.set_value(true);
+        back_left_wing.set_value(true);
+        back_right_wing.set_value(true);
+        // blocker up thingy (blocker position/erect)
     }
 }
 
