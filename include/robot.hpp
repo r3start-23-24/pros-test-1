@@ -21,10 +21,10 @@ extern pros::Rotation cata_rotation_sensor;
 
 extern pros::Motor intake_motor;
 
-extern pros::ADIDigitalOut left_wing;
-extern pros::ADIDigitalOut right_wing;
-
-extern pros::ADIDigitalOut blocker;
+extern pros::ADIDigitalOut front_left_wing;
+extern pros::ADIDigitalOut front_right_wing;
+extern pros::ADIDigitalOut back_left_wing;
+extern pros::ADIDigitalOut back_right_wing;
 
 extern pros::Imu inertial_sensor;
 
