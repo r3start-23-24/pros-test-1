@@ -13,6 +13,26 @@ bool front_right_wing_extended = false;
 bool back_left_wing_extended = false;
 bool back_right_wing_extended = false;
 
+// start move blocker funcs
+const int allowance = 500; // +/- 5 degrees
+const int down_pos = 2;
+const int blocker_up_pos = -1;
+const float hang_up_pos = -0.5;
+
+void blocker_move(float pos) {
+	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	cata_motor.move(127);
+	while (!(cata_rotation_sensor.get_position() > pos-allowance && cata_rotation_sensor.get_position() < pos+allowance))
+	{
+		pros::c::delay(1);
+        printf("%d", cata_rotation_sensor.get_position());
+	}
+	cata_motor.brake();
+	pros::c::delay(50);
+	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+}
+// end move blocker funcs
+
 const int oneTile = 1600;
 void moveForward(float tiles, int velocity) {
 	left_drive_motors.move_relative(tiles * oneTile, velocity);
@@ -62,9 +82,7 @@ void initialize() {
 	right_drive_motors.set_brake_modes(MOTOR_BRAKE_COAST);
 }
 
-void disabled() {
-	
-}
+void disabled() {}
 
 // pre-auton (eg auton selector)
 void competition_initialize() {}
@@ -95,15 +113,17 @@ void regular_loop() {
 	// new puncher code
 	if (mainController.get_digital(DIGITAL_UP))
 	{
+        pto.set_value(true);
 		cata_motor.move_velocity(100);
 	}
 	else if (mainController.get_digital(DIGITAL_R1))
 	{
+        pto.set_value(true);
 		cata_motor.move_velocity(-100);
 	}
     else if (mainController.get_digital(DIGITAL_DOWN))
     {
-        // pto pulled to hang
+        pto.set_value(true);
         cata_motor.move_velocity(-100);
     }
 	else
@@ -124,85 +144,51 @@ void regular_loop() {
 	{
 		intake_motor.move(0);
 	}
+
 	if (mainController.get_digital_new_press(DIGITAL_LEFT))
 	{
-		if (front_left_wing_extended)
-		{
-			front_left_wing.set_value(false);
-			front_left_wing_extended = false;
-		}
-		else
-		{
-			front_left_wing.set_value(true);
-			front_left_wing_extended = true;
-		}
+        front_left_wing_extended = !front_left_wing_extended;
+        front_left_wing.set_value(front_left_wing_extended);
 	}
 	else if (mainController.get_digital_new_press(DIGITAL_RIGHT))
 	{
-		if (front_right_wing_extended)
-		{
-			front_right_wing.set_value(false);
-			front_right_wing_extended = false;
-		}
-		else
-		{
-			front_right_wing.set_value(true);
-			front_right_wing_extended = true;
-		}
+        front_right_wing_extended = !front_right_wing_extended;
+        front_right_wing.set_value(front_right_wing_extended);
 	}
-
-    if (mainController.get_digital_new_press(DIGITAL_X))
-    {
-        // toggle front wing
-    }
-    else if (mainController.get_digital_new_press(DIGITAL_X))
-    {
-        // toggle back wing
-    }
 }
 void shifted_loop() {
-    if (mainController.get_digital_new_press(DIGITAL_LEFT))
+	if (mainController.get_digital_new_press(DIGITAL_LEFT))
 	{
-		if (back_left_wing_extended)
-		{
-			back_left_wing.set_value(false);
-			back_left_wing_extended = false;
-		}
-		else
-		{
-			back_left_wing.set_value(true);
-			back_left_wing_extended = true;
-		}
+        back_left_wing_extended = !back_left_wing_extended;
+        back_left_wing.set_value(back_left_wing_extended);
 	}
 	else if (mainController.get_digital_new_press(DIGITAL_RIGHT))
 	{
-		if (back_right_wing_extended)
-		{
-			back_right_wing.set_value(false);
-			back_right_wing_extended = false;
-		}
-		else
-		{
-			back_right_wing.set_value(true);
-			back_right_wing_extended = true;
-		}
+        back_right_wing_extended = !back_right_wing_extended;
+        back_right_wing.set_value(back_right_wing_extended);
 	}
 
     if (mainController.get_digital_new_press(DIGITAL_L1))
     {
         // pto shift pull (blocker)
+        pto.set_value(false);
         // rotate to block point lol
+        blocker_move(blocker_up_pos);
     }
     else if (mainController.get_digital_new_press(DIGITAL_L2))
     {
         // pto shift pull (blocker)
+        pto.set_value(false);
         // rotate to hang up point lol
+        blocker_move(hang_up_pos);
     }
 
     if (mainController.get_digital_new_press(DIGITAL_DOWN))
     {
         // pto shift pull (blocker)
+        pto.set_value(false);
         // rotate to bottom point lol
+        blocker_move(down_pos);
     }
 
     if (mainController.get_digital_new_press(DIGITAL_UP))
@@ -211,7 +197,8 @@ void shifted_loop() {
         front_right_wing.set_value(true);
         back_left_wing.set_value(true);
         back_right_wing.set_value(true);
-        // blocker up thingy (blocker position/erect)
+        // blocker up thingy (blocker position)
+        blocker_move(blocker_up_pos);
     }
 }
 
