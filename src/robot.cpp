@@ -1,4 +1,5 @@
 #include "robot.hpp"
+#include "pros/adi.hpp"
 #include "pros/rotation.hpp"
 #include "lemlib/api.hpp"
 
@@ -18,10 +19,11 @@ pros::Rotation cata_rotation_sensor (15);
 
 pros::Motor intake_motor (14, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
 
-pros::ADIDigitalOut front_left_wing (3);
-pros::ADIDigitalOut front_right_wing (2);
-pros::ADIDigitalOut back_left_wing (5);
-pros::ADIDigitalOut back_right_wing (6);
+pros::ADIDigitalOut pto (1);
+pros::ADIDigitalOut front_left_wing (2);
+pros::ADIDigitalOut front_right_wing (3);
+pros::ADIDigitalOut back_left_wing (4);
+pros::ADIDigitalOut back_right_wing (5);
 
 pros::Imu inertial_sensor(16); // change port
 
