@@ -113,17 +113,17 @@ void regular_loop() {
 	// new puncher code
 	if (mainController.get_digital(DIGITAL_UP))
 	{
-        pto.set_value(true);
+        pto.set_value(false);
 		cata_motor.move_velocity(100);
 	}
 	else if (mainController.get_digital(DIGITAL_R1))
 	{
-        pto.set_value(true);
+        pto.set_value(false);
 		cata_motor.move_velocity(-100);
 	}
 	else if (mainController.get_digital(DIGITAL_DOWN))
     {
-        pto.set_value(true);
+        pto.set_value(false);
         cata_motor.move_velocity(-100);
     }
 	else
@@ -171,14 +171,14 @@ void shifted_loop() {
     if (mainController.get_digital_new_press(DIGITAL_L1))
     {
         // pto shift pull (blocker)
-        pto.set_value(false);
+        pto.set_value(true);
         // rotate to block point lol
         blocker_move(blocker_up_pos);
     }
     else if (mainController.get_digital_new_press(DIGITAL_L2))
     {
         // pto shift pull (blocker)
-        pto.set_value(false);
+        pto.set_value(true);
         // rotate to hang up point lol
         blocker_move(hang_up_pos);
     }
@@ -186,7 +186,7 @@ void shifted_loop() {
     if (mainController.get_digital_new_press(DIGITAL_DOWN))
     {
         // pto shift pull (blocker)
-        pto.set_value(false);
+        pto.set_value(true);
         // rotate to bottom point lol
         blocker_move(down_pos);
     }
@@ -203,9 +203,9 @@ void shifted_loop() {
 }
 
 void opcontrol() {
-	lemlib_chassis.calibrate();
-    lemlib_chassis.setPose(0,0,0);
-    lemlib_chassis.moveTo(0,25,2000);
+	//lemlib_chassis.calibrate();
+    //lemlib_chassis.setPose(0,0,0);
+    //lemlib_chassis.moveTo(0,25,2000);
 	
 	//pros::Task gifs(gifthread);
 
