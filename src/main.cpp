@@ -14,10 +14,10 @@ bool back_left_wing_extended = false;
 bool back_right_wing_extended = false;
 
 // start move blocker funcs
-const float allowance = 0.1; // in rotations now
-const int down_pos = 2;
-const int blocker_up_pos = -1;
-const float hang_up_pos = -0.5;
+const float allowance = 500; // 5 degrees
+const int down_pos = 2*36000;
+const int blocker_up_pos = -1*36000;
+const float hang_up_pos = -0.5*36000;
 
 void blocker_move(float pos) {
 	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
@@ -25,7 +25,7 @@ void blocker_move(float pos) {
 	while (!(cata_rotation_sensor.get_position() > pos-allowance && cata_rotation_sensor.get_position() < pos+allowance))
 	{
 		pros::c::delay(1);
-        printf("%d", cata_rotation_sensor.get_position());
+        printf("%d\n", cata_rotation_sensor.get_position());
 	}
 	cata_motor.brake();
 	pros::c::delay(50);
@@ -110,20 +110,18 @@ void drive_loop() {
 	right_drive_motors.move(right);
 }
 void regular_loop() {
-	// new puncher code
+	// puncher = false, blocker = true
+	
 	if (mainController.get_digital(DIGITAL_UP))
 	{
-        pto.set_value(false);
+		// blocker
+        pto.set_value(true);
 		cata_motor.move_velocity(100);
-	}
-	else if (mainController.get_digital(DIGITAL_R1))
-	{
-        pto.set_value(false);
-		cata_motor.move_velocity(-100);
 	}
 	else if (mainController.get_digital(DIGITAL_DOWN))
     {
-        pto.set_value(false);
+		// blocker
+        pto.set_value(true);
         cata_motor.move_velocity(-100);
     }
 	else
@@ -131,7 +129,14 @@ void regular_loop() {
 		cata_motor.brake();
 		cata_motor.move_velocity(0);
 	}
-	// end new puncher code
+	
+	if (mainController.get_digital(DIGITAL_R1))
+	{
+		// puncher
+        pto.set_value(false);
+		cata_motor.move_velocity(-100);
+	}
+
 	if (mainController.get_digital(DIGITAL_L1))
 	{
 		intake_motor.move(-127);
