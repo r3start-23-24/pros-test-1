@@ -14,7 +14,7 @@ bool back_left_wing_extended = false;
 bool back_right_wing_extended = false;
 
 // start move blocker funcs
-const int allowance = 500; // +/- 5 degrees
+const float allowance = 0.1; // in rotations now
 const int down_pos = 2;
 const int blocker_up_pos = -1;
 const float hang_up_pos = -0.5;
@@ -121,7 +121,7 @@ void regular_loop() {
         pto.set_value(true);
 		cata_motor.move_velocity(-100);
 	}
-    else if (mainController.get_digital(DIGITAL_DOWN))
+	else if (mainController.get_digital(DIGITAL_DOWN))
     {
         pto.set_value(true);
         cata_motor.move_velocity(-100);
