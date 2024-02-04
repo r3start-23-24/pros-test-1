@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "pros-odom-1",
+    "project_name": "pros-test-1",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -348,7 +348,9 @@
       }
     },
     "upload_options": {
-      "slot": 3
+      "slot": 1,
+      "icon": "clawbot",
+      "after": "none"
     }
   }
 }
