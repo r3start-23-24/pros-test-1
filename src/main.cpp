@@ -65,6 +65,7 @@ void initialize() {
 	selector::init();
 
 	cata_rotation_sensor.set_data_rate(5);
+    // default is 10 (ms)
 
 	cata_motor.set_brake_mode(MOTOR_BRAKE_COAST);
 	intake_motor.set_brake_mode(MOTOR_BRAKE_BRAKE);
@@ -101,6 +102,12 @@ void drive_loop() {
 }
 void regular_loop() {
 	// puncher = false, blocker = true
+
+    if (mainController.get_digital(DIGITAL_X))
+    {
+        lemlib_chassis.moveTo(0, 0, 2000, 50);
+        lemlib_chassis.turnTo(100, 0, 2000, false, 50);
+    }
 
 	if (mainController.get_digital(DIGITAL_UP))
 	{
