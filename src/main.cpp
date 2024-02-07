@@ -22,6 +22,8 @@ const int hang_up_pos = 47000;
 void blocker_move(float pos) {
 	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	if (cata_rotation_sensor.get_position() - pos > 0);
+    // actually do this lmao
+    // needs to determine direction to move motor
 	cata_motor.move(127);
 	while (!(cata_rotation_sensor.get_position() > pos-allowance && cata_rotation_sensor.get_position() < pos+allowance))
 	{
@@ -54,21 +56,6 @@ void turnRight(float degrees, int velocity) {
 	while (left_motor_1.get_actual_velocity() != 0)
 	{
 		pros::c::delay(5);
-	}
-}
-
-void gifthread() {
-	while (true)
-	{
-		Gif gif1("/usd/gif1.gif", lv_scr_act());
-		pros::c::delay(10000);
-		gif1.clean();
-		Gif gif2("/usd/gif2.gif", lv_scr_act());
-		pros::c::delay(10000);
-		gif2.clean();
-		Gif gif3("/usd/gif3.gif", lv_scr_act());
-		pros::c::delay(10000);
-		gif3.clean();
 	}
 }
 
