@@ -80,7 +80,11 @@ void competition_initialize() {}
 
 void autonomous() {
 	lemlib_chassis.setPose(0,0,0);
-	lemlib_chassis.moveTo(24, 0, 2000, 50);
+	lemlib_chassis.moveTo(0, 36, 2000, 50);
+	lemlib_chassis.turnTo(100, 36, 1000);
+	lemlib_chassis.moveTo(72, 36, 3000, 60);
+	lemlib_chassis.turnTo(72, 0, 3000, true);
+	lemlib_chassis.moveTo(72, 0, 3000);
 }
 
 void drive_loop() {
