@@ -25,7 +25,7 @@ pros::ADIDigitalOut front_right_wing (3);
 pros::ADIDigitalOut back_left_wing (4);
 pros::ADIDigitalOut back_right_wing (5);
 
-pros::Imu inertial_sensor(16); // change port
+pros::Imu inertial_sensor(16);
 
 // lemlib below
 
