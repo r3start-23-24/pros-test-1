@@ -60,6 +60,11 @@ void turnRight(float degrees, int velocity) {
 	}
 }
 
+const int one_lemlib_tile = 24;
+void move_lemlib_forward(float tiles, int velocity) {
+    lemlib_chassis.moveTo(x, y, 2000);
+}
+
 void initialize() {
 	lemlib_chassis.calibrate();
 	selector::init();
