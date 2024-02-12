@@ -1,5 +1,6 @@
 #include "main.h"
 #include "gif-pros/gifclass.hpp"
+#include "lemlib/chassis/chassis.hpp"
 #include "pros/misc.h"
 #include "pros/motors.h"
 #include "pros/rtos.h"
@@ -61,7 +62,6 @@ void turnRight(float degrees, int velocity) {
 
 void initialize() {
 	lemlib_chassis.calibrate();
-    lemlib_chassis.setPose(0,0,0);
 	selector::init();
 
 	cata_rotation_sensor.set_data_rate(5);
@@ -79,9 +79,8 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous() {
-	lemlib_chassis.calibrate();
-    lemlib_chassis.setPose(0,0,0);
-    lemlib_chassis.turnTo(30,0,2000);
+	lemlib_chassis.setPose(0,0,0);
+	lemlib_chassis.moveTo(24, 0, 2000, 50);
 }
 
 void drive_loop() {
