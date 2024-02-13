@@ -70,7 +70,7 @@ void move_lemlib(float tiles, int velocity = 50) {
 void turn_lemlib(int alpha, int velocity = 50) {
     int theta = lemlib_chassis.getPose().theta;
     lemlib_x -= sin(theta + alpha);
-    lemlib_y += sin(theta + alpha);
+    lemlib_y += cos(theta + alpha);
     lemlib_chassis.turnTo(lemlib_x, lemlib_y, 1000);
 }
 
