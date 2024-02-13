@@ -61,8 +61,17 @@ void turnRight(float degrees, int velocity) {
 }
 
 const int one_lemlib_tile = 24;
-void move_lemlib_forward(float tiles, int velocity) {
-    lemlib_chassis.moveTo(x, y, 2000);
+int lemlib_x;
+int lemlib_y;
+void move_lemlib(float tiles, int velocity = 50) {
+    lemlib_y += one_lemlib_tile*tiles;
+    lemlib_chassis.moveTo(lemlib_x, lemlib_y, 1000*tiles, velocity);
+}
+void turn_lemlib(int alpha, int velocity = 50) {
+    int theta = lemlib_chassis.getPose().theta;
+    lemlib_x -= sin(theta + alpha);
+    lemlib_y += sin(theta + alpha);
+    lemlib_chassis.turnTo(lemlib_x, lemlib_y, 1000);
 }
 
 void initialize() {
