@@ -60,12 +60,12 @@ void turnRight(float degrees, int velocity) {
 	}
 }
 
-const int one_lemlib_tile = 24;
-int lemlib_x;
-int lemlib_y;
-void move_lemlib(float tiles, int velocity = 50) {
-    lemlib_y += one_lemlib_tile*tiles;
-    lemlib_chassis.moveTo(lemlib_x, lemlib_y, 1000*tiles, velocity);
+const float one_lemlib_tile = 24;
+float lemlib_x;
+float lemlib_y;
+void move_lemlib(float tiles, char direction, int velocity = 90) {
+    direction == 'x' ? lemlib_x =+ one_lemlib_tile*tiles : lemlib_y += one_lemlib_tile*tiles;
+    lemlib_chassis.moveTo(lemlib_x, lemlib_y, 3000, velocity);
 }
 void turn_lemlib(int alpha, int velocity = 50) {
     int theta = lemlib_chassis.getPose().theta;
@@ -93,12 +93,12 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous() {
-	lemlib_chassis.setPose(0,0,0);
-	lemlib_chassis.moveTo(0, 36, 2000, 50);
-	lemlib_chassis.turnTo(100, 36, 1000);
-	lemlib_chassis.moveTo(72, 36, 3000, 60);
-	lemlib_chassis.turnTo(72, 0, 3000, true);
-	lemlib_chassis.moveTo(72, 0, 3000);
+	intake_motor.move(127);
+	move_lemlib(2.25, 'y', 90);
+	lemlib_chassis.turnTo(-100, 2.5*one_lemlib_tile, 1000, 60);
+	move_lemlib(0.9f, 'x', 90);
+	move_lemlib(-0.5f, 'x', 90);
+	lemlib_chassis.moveTo(-one_lemlib_tile+5, one_lemlib_tile/2-5, 3000, 60);
 }
 
 void drive_loop() {
