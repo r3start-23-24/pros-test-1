@@ -1,6 +1,7 @@
 #include "main.h"
 #include "gif-pros/gifclass.hpp"
 #include "lemlib/chassis/chassis.hpp"
+#include "lemlib/util.hpp"
 #include "pros/misc.h"
 #include "pros/motors.h"
 #include "pros/rtos.h"
@@ -69,9 +70,9 @@ void move_lemlib(float tiles, int velocity = 50) {
 }
 void turn_lemlib(int alpha, int velocity = 50) {
     int theta = lemlib_chassis.getPose().theta;
-    lemlib_x -= sin(theta + alpha);
-    lemlib_y += cos(theta + alpha);
-    lemlib_chassis.turnTo(lemlib_x, lemlib_y, 1000);
+    theta = lemlib::degToRad(theta);
+    alpha = lemlib::degToRad(alpha);
+    lemlib_chassis.turnTo(lemlib_x - sin(theta + alpha), lemlib_y + cos(theta + alpha), 1000);
 }
 
 void initialize() {
