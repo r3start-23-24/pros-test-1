@@ -7,6 +7,7 @@
 #include "pros/rtos.h"
 #include "pros/rtos.hpp"
 #include "robot.hpp"
+#include "autons.hpp"
 #include "autoSelect/selection.h"
 #include "lemlib/api.hpp"
 
@@ -77,6 +78,7 @@ void turn_lemlib(int alpha, int velocity = 50) {
 
 void initialize() {
 	lemlib_chassis.calibrate();
+    lemlib_chassis.setPose(0,0,0);
 	selector::init();
 
 	cata_rotation_sensor.set_data_rate(5);
@@ -91,10 +93,20 @@ void initialize() {
 void disabled() {}
 
 // pre-auton (eg auton selector)
-//no
 void competition_initialize() {}
 
 void autonomous() {
+    switch (selector::auton) {
+        case 0:
+            skills_auton();
+            break;
+        case 1:
+            break;
+        case 2:
+            break;
+        default:
+            break;
+    }
 	intake_motor.move(127);
 	move_lemlib(2.25, 'y', 90);
 	intake_motor.move(0);
@@ -102,7 +114,6 @@ void autonomous() {
 	front_left_wing.set_value(true);
 	intake_motor.move(-127);
 	move_lemlib(1, 'x', 90);
-
 	front_left_wing.set_value(false);
 	//move_lemlib(-0.5, 'x', 90);
 	lemlib_chassis.moveTo(0.4*one_lemlib_tile, 2.25*one_lemlib_tile, 2000, 80);
