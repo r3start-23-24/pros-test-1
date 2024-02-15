@@ -65,7 +65,7 @@ const float one_lemlib_tile = 24;
 float lemlib_x;
 float lemlib_y;
 void move_lemlib(float tiles, char direction, int velocity = 90) {
-    direction == 'x' ? lemlib_x =+ one_lemlib_tile*tiles : lemlib_y += one_lemlib_tile*tiles;
+    direction == 'x' ? lemlib_x += one_lemlib_tile*tiles : lemlib_y += one_lemlib_tile*tiles;
     lemlib_chassis.moveTo(lemlib_x, lemlib_y, 3000, velocity);
 }
 void turn_lemlib(int alpha, int velocity = 50) {
@@ -91,15 +91,23 @@ void initialize() {
 void disabled() {}
 
 // pre-auton (eg auton selector)
+//no
 void competition_initialize() {}
 
 void autonomous() {
 	intake_motor.move(127);
 	move_lemlib(2.25, 'y', 90);
+	intake_motor.move(0);
 	lemlib_chassis.turnTo(-100, 2.5*one_lemlib_tile, 1000, 60);
-	move_lemlib(0.9f, 'x', 90);
-	move_lemlib(-0.5f, 'x', 90);
-	lemlib_chassis.moveTo(-one_lemlib_tile+5, one_lemlib_tile/2-5, 3000, 60);
+	front_left_wing.set_value(true);
+	intake_motor.move(-127);
+	move_lemlib(1, 'x', 90);
+
+	front_left_wing.set_value(false);
+	//move_lemlib(-0.5, 'x', 90);
+	lemlib_chassis.moveTo(0.4*one_lemlib_tile, 2.25*one_lemlib_tile, 2000, 80);
+	lemlib_chassis.moveTo(-one_lemlib_tile+10, one_lemlib_tile/2, 3000, 60);
+	lemlib_chassis.turnTo(-24, 5, 1000, true, 60);
 }
 
 void drive_loop() {
@@ -130,13 +138,15 @@ void regular_loop() {
 	if (mainController.get_digital(DIGITAL_UP))
 	{
 		// blocker
-        pto.set_value(true);
+        pto.set_value(false);
+		back_right_wing.set_value(true);
 		cata_motor.move_velocity(100);
 	}
 	else if (mainController.get_digital(DIGITAL_DOWN))
     {
 		// blocker
-        pto.set_value(true);
+        pto.set_value(false);
+		back_right_wing.set_value(true);
         cata_motor.move_velocity(-100);
     }
 	else
@@ -148,7 +158,7 @@ void regular_loop() {
 	if (mainController.get_digital(DIGITAL_R1))
 	{
 		// puncher
-        pto.set_value(false);
+        pto.set_value(true);
 		cata_motor.move_velocity(-100);
 	}
 
