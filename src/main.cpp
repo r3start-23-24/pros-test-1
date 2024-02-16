@@ -11,7 +11,7 @@
 bool front_left_wing_extended = false;
 bool front_right_wing_extended = false;
 bool back_left_wing_extended = false;
-bool back_right_wing_extended = false;
+bool ratchet_piston_extended = false;
 
 // start move blocker funcs
 const int allowance = 500; // 5 degrees
@@ -36,29 +36,6 @@ void blocker_move(float pos) {
 }
 // end move blocker funcs
 
-const int oneTile = 1600;
-void moveForward(float tiles, int velocity) {
-	left_drive_motors.move_relative(tiles * oneTile, velocity);
-	right_drive_motors.move_relative(tiles * oneTile, velocity);
-	pros::c::delay(100);
-	while (left_motor_1.get_actual_velocity() != 0)
-	{
-		pros::c::delay(5);
-	}
-}
-void turnRight(float degrees, int velocity) {
-	const int ninetyTurn = 80;
-	const int oneDegree = 550/90;
-
-	left_drive_motors.move_relative(oneDegree * degrees, velocity);
-	right_drive_motors.move_relative(-(oneDegree * degrees), velocity);
-	pros::c::delay(100);
-	while (left_motor_1.get_actual_velocity() != 0)
-	{
-		pros::c::delay(5);
-	}
-}
-
 void initialize() {
 	lemlib_chassis.calibrate();
     lemlib_chassis.setPose(0,0,0);
@@ -75,10 +52,12 @@ void initialize() {
 
 void disabled() {}
 
-// pre-auton (eg auton selector)
 void competition_initialize() {}
 
 void autonomous() {
+	ratchet_piston.set_value(true);
+	ratchet_piston_extended = false;
+	cata_motor.move_relative(-10, 100);
     switch (selector::auton) {
         case 0:
             skills_auton();
@@ -123,14 +102,14 @@ void regular_loop() {
 	{
 		// blocker
         pto.set_value(false);
-		back_right_wing.set_value(true);
+		ratchet_piston.set_value(true);
 		cata_motor.move_velocity(100);
 	}
 	else if (mainController.get_digital(DIGITAL_DOWN))
     {
 		// blocker
         pto.set_value(false);
-		back_right_wing.set_value(true);
+		ratchet_piston.set_value(true);
         cata_motor.move_velocity(-100);
     }
 	else
@@ -176,55 +155,12 @@ void shifted_loop() {
         back_left_wing_extended = !back_left_wing_extended;
         back_left_wing.set_value(back_left_wing_extended);
 	}
-	else if (mainController.get_digital_new_press(DIGITAL_RIGHT))
-	{
-        back_right_wing_extended = !back_right_wing_extended;
-        back_right_wing.set_value(back_right_wing_extended);
-	}
-
-    if (mainController.get_digital_new_press(DIGITAL_L1))
-    {
-        // pto shift pull (blocker)
-        pto.set_value(true);
-        // rotate to block point lol
-        blocker_move(blocker_up_pos);
-    }
-    else if (mainController.get_digital_new_press(DIGITAL_L2))
-    {
-        // pto shift pull (blocker)
-        pto.set_value(true);
-        // rotate to hang up point lol
-        blocker_move(hang_up_pos);
-    }
-
-    if (mainController.get_digital_new_press(DIGITAL_DOWN))
-    {
-        // pto shift pull (blocker)
-        pto.set_value(true);
-        // rotate to bottom point lol
-        blocker_move(down_pos);
-    }
-
-    if (mainController.get_digital_new_press(DIGITAL_UP))
-    {
-        front_left_wing.set_value(true);
-        front_right_wing.set_value(true);
-        back_left_wing.set_value(true);
-        back_right_wing.set_value(true);
-        // blocker up thingy (blocker position)
-        blocker_move(blocker_up_pos);
-    }
 }
 
 void opcontrol() {
-	//lemlib_chassis.calibrate();
-    //lemlib_chassis.setPose(0,0,0);
-    //lemlib_chassis.moveTo(0,25,2000);
-
 	while (true) {
 		drive_loop();
 		mainController.get_digital(DIGITAL_R2) ? shifted_loop() : regular_loop();
-		printf("%d\n", cata_rotation_sensor.get_position());
 		pros::c::delay(5);
 	}
 }

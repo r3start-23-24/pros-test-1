@@ -23,7 +23,7 @@ pros::ADIDigitalOut pto (4);
 pros::ADIDigitalOut front_left_wing (1);
 pros::ADIDigitalOut front_right_wing (2);
 pros::ADIDigitalOut back_left_wing (3);
-pros::ADIDigitalOut back_right_wing (5); // to be removed
+pros::ADIDigitalOut ratchet_piston (5); // to be removed
 // ratchet is 5
 
 pros::Imu inertial_sensor(16);
