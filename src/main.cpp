@@ -56,8 +56,10 @@ void competition_initialize() {}
 
 void autonomous() {
 	ratchet_piston.set_value(true);
-	ratchet_piston_extended = false;
-	cata_motor.move_relative(-10, 100);
+	pros::c::delay(200);
+	cata_motor.move_relative(100, 100);
+	pros::c::delay(1000);
+	cata_motor.move_relative(-100, 100);
     switch (selector::auton) {
         case 0:
             skills_auton();
