@@ -24,7 +24,7 @@ extern pros::ADIDigitalOut pto;
 extern pros::ADIDigitalOut front_left_wing;
 extern pros::ADIDigitalOut front_right_wing;
 extern pros::ADIDigitalOut back_left_wing;
-extern pros::ADIDigitalOut back_right_wing;
+extern pros::ADIDigitalOut ratchet_piston;
 
 extern pros::Imu inertial_sensor;
 

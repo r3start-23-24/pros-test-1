@@ -11,7 +11,7 @@
 bool front_left_wing_extended = false;
 bool front_right_wing_extended = false;
 bool back_left_wing_extended = false;
-bool back_right_wing_extended = false;
+bool ratchet_piston_extended = false;
 
 // start move blocker funcs
 const int allowance = 500; // 5 degrees
@@ -56,6 +56,8 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous() {
+	ratchet_piston.set_value(false);
+	ratchet_piston_extended = false;
     switch (selector::auton) {
         case 0:
             skills_auton();
@@ -100,14 +102,14 @@ void regular_loop() {
 	{
 		// blocker
         pto.set_value(false);
-		back_right_wing.set_value(true);
+		ratchet_piston.set_value(true);
 		cata_motor.move_velocity(100);
 	}
 	else if (mainController.get_digital(DIGITAL_DOWN))
     {
 		// blocker
         pto.set_value(false);
-		back_right_wing.set_value(true);
+		ratchet_piston.set_value(true);
         cata_motor.move_velocity(-100);
     }
 	else
@@ -155,8 +157,8 @@ void shifted_loop() {
 	}
 	else if (mainController.get_digital_new_press(DIGITAL_RIGHT))
 	{
-        back_right_wing_extended = !back_right_wing_extended;
-        back_right_wing.set_value(back_right_wing_extended);
+        ratchet_piston_extended = !ratchet_piston_extended;
+        ratchet_piston.set_value(ratchet_piston_extended);
 	}
 
     if (mainController.get_digital_new_press(DIGITAL_L1))
@@ -187,17 +189,13 @@ void shifted_loop() {
         front_left_wing.set_value(true);
         front_right_wing.set_value(true);
         back_left_wing.set_value(true);
-        back_right_wing.set_value(true);
+        ratchet_piston.set_value(true);
         // blocker up thingy (blocker position)
         blocker_move(blocker_up_pos);
     }
 }
 
 void opcontrol() {
-	//lemlib_chassis.calibrate();
-    //lemlib_chassis.setPose(0,0,0);
-    //lemlib_chassis.moveTo(0,25,2000);
-
 	while (true) {
 		drive_loop();
 		mainController.get_digital(DIGITAL_R2) ? shifted_loop() : regular_loop();
