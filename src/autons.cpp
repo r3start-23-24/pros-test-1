@@ -1,4 +1,5 @@
 #include "autons.hpp"
+#include "pros/rtos.h"
 #include "robot.hpp"
 
 const float one_lemlib_tile = 24;
@@ -55,15 +56,24 @@ void points_auton() {
 
 void awp_auton() {
 	intake_motor.move(127);
-	move_lemlib(2.25, 'y', 90);
+	move_lemlib(2.3, 'y', 90);
 	intake_motor.move(0);
 	lemlib_chassis.turnTo(-100, 2.5*one_lemlib_tile, 1000, 60);
 	front_left_wing.set_value(true);
 	intake_motor.move(-127);
-	move_lemlib(1, 'x', 90);
+	//move_lemlib(1, 'x', 90);
+    lemlib_chassis.moveTo(one_lemlib_tile, 2.25*one_lemlib_tile-2, 3000, 100);
 	front_left_wing.set_value(false);
 	//move_lemlib(-0.5, 'x', 90);
 	lemlib_chassis.moveTo(0.4*one_lemlib_tile, 2.25*one_lemlib_tile, 2000, 80);
-	lemlib_chassis.moveTo(-one_lemlib_tile+10, one_lemlib_tile/2, 3000, 60);
-	lemlib_chassis.turnTo(-24, 5, 1000, true, 60);
+	lemlib_chassis.moveTo(-one_lemlib_tile+12, one_lemlib_tile/2+1, 3000, 60);
+    
+	lemlib_chassis.turnTo(-24, 15, 1000, false, 127);
+    lemlib_chassis.moveTo(-25, 17, 3000, 100);
+    back_left_wing.set_value(true);
+    pros::c::delay(200);
+    //lemlib_chassis.turnTo(-24, -12, 1000, true, 127);
+    lemlib_chassis.moveTo(0, 0, 3000, 100);
+    back_left_wing.set_value(false);
+    move_lemlib(-2.3, 'y', 90);
 }
