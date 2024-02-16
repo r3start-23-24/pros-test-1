@@ -19,6 +19,11 @@ void turn_lemlib(int alpha, int velocity = 50) {
 }
 
 void skills_auton() {
+    lemlib_chassis.moveTo(0.2*one_lemlib_tile, -0.7*one_lemlib_tile, 2500);
+    lemlib_chassis.turnTo(one_lemlib_tile, 1.5*one_lemlib_tile, 1500);
+    pto.set_value(true);
+	ratchet_piston.set_value(true);
+    cata_motor.move(127);
 }
 
 void points_auton() {
@@ -67,11 +72,13 @@ void awp_auton() {
 	lemlib_chassis.moveTo(-one_lemlib_tile+12, one_lemlib_tile/2+1, 3000, 60);
     
 	lemlib_chassis.turnTo(-24, 15, 1000, false, 127);
-    lemlib_chassis.moveTo(-25, 17, 3000, 100);
+    lemlib_chassis.moveTo(-26, 18, 3000, 100);
     back_left_wing.set_value(true);
     pros::c::delay(200);
     //lemlib_chassis.turnTo(-24, -12, 1000, true, 127);
-    lemlib_chassis.moveTo(0, 0, 3000, 100);
+    lemlib_chassis.moveTo(0, 0, 3000, 127);
     back_left_wing.set_value(false);
-    move_lemlib(-2.3, 'y', 90);
+    pros::c::delay(200);
+    lemlib_chassis.turnTo(-1000, 0, 1500, true);
+    lemlib_chassis.moveTo(0.7*one_lemlib_tile, 0, 3000, 100);
 }
