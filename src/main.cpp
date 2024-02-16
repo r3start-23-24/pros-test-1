@@ -36,29 +36,6 @@ void blocker_move(float pos) {
 }
 // end move blocker funcs
 
-const int oneTile = 1600;
-void moveForward(float tiles, int velocity) {
-	left_drive_motors.move_relative(tiles * oneTile, velocity);
-	right_drive_motors.move_relative(tiles * oneTile, velocity);
-	pros::c::delay(100);
-	while (left_motor_1.get_actual_velocity() != 0)
-	{
-		pros::c::delay(5);
-	}
-}
-void turnRight(float degrees, int velocity) {
-	const int ninetyTurn = 80;
-	const int oneDegree = 550/90;
-
-	left_drive_motors.move_relative(oneDegree * degrees, velocity);
-	right_drive_motors.move_relative(-(oneDegree * degrees), velocity);
-	pros::c::delay(100);
-	while (left_motor_1.get_actual_velocity() != 0)
-	{
-		pros::c::delay(5);
-	}
-}
-
 void initialize() {
 	lemlib_chassis.calibrate();
     lemlib_chassis.setPose(0,0,0);
