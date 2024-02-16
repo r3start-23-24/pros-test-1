@@ -26,7 +26,7 @@ void points_auton() {
     back_left_wing.set_value(true);
     lemlib_chassis.turnTo(-1.2*one_lemlib_tile, 0, 1500, 70); // x must be the same as the value on line above, pos/neg may need to be changed. y must be 0
     lemlib_chassis.moveTo(1*one_lemlib_tile, -3*one_lemlib_tile, 1500);
-    back_left_wing.set_value(true);
+    back_left_wing.set_value(false);
     lemlib_chassis.turnTo(-1000, -2.5*one_lemlib_tile, 1500, 70);
     move_lemlib(1, 'x');
     move_lemlib(-0.5, 'x');
@@ -43,11 +43,9 @@ void points_auton() {
     lemlib_chassis.moveTo(2.5*one_lemlib_tile, -0.1*one_lemlib_tile, 1500, 60);
     lemlib_chassis.turnTo(2.5*one_lemlib_tile, 1000, 1500, 60);
     back_left_wing.set_value(true);
-    back_right_wing.set_value(true);
     move_lemlib(-2, 'y');
     move_lemlib(0.5, 'y');
-    back_left_wing.set_value(true);
-    back_right_wing.set_value(true);
+    back_left_wing.set_value(false);
     lemlib_chassis.turnTo(2.5*one_lemlib_tile, -2*one_lemlib_tile, 1500, 70);
     intake_motor.move(-127);
     move_lemlib(-0.6, 'y');
