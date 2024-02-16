@@ -52,12 +52,12 @@ void initialize() {
 
 void disabled() {}
 
-// pre-auton (eg auton selector)
 void competition_initialize() {}
 
 void autonomous() {
-	ratchet_piston.set_value(false);
+	ratchet_piston.set_value(true);
 	ratchet_piston_extended = false;
+	cata_motor.move_relative(-10, 100);
     switch (selector::auton) {
         case 0:
             skills_auton();
@@ -155,51 +155,12 @@ void shifted_loop() {
         back_left_wing_extended = !back_left_wing_extended;
         back_left_wing.set_value(back_left_wing_extended);
 	}
-	else if (mainController.get_digital_new_press(DIGITAL_RIGHT))
-	{
-        ratchet_piston_extended = !ratchet_piston_extended;
-        ratchet_piston.set_value(ratchet_piston_extended);
-	}
-
-    if (mainController.get_digital_new_press(DIGITAL_L1))
-    {
-        // pto shift pull (blocker)
-        pto.set_value(true);
-        // rotate to block point lol
-        blocker_move(blocker_up_pos);
-    }
-    else if (mainController.get_digital_new_press(DIGITAL_L2))
-    {
-        // pto shift pull (blocker)
-        pto.set_value(true);
-        // rotate to hang up point lol
-        blocker_move(hang_up_pos);
-    }
-
-    if (mainController.get_digital_new_press(DIGITAL_DOWN))
-    {
-        // pto shift pull (blocker)
-        pto.set_value(true);
-        // rotate to bottom point lol
-        blocker_move(down_pos);
-    }
-
-    if (mainController.get_digital_new_press(DIGITAL_UP))
-    {
-        front_left_wing.set_value(true);
-        front_right_wing.set_value(true);
-        back_left_wing.set_value(true);
-        ratchet_piston.set_value(true);
-        // blocker up thingy (blocker position)
-        blocker_move(blocker_up_pos);
-    }
 }
 
 void opcontrol() {
 	while (true) {
 		drive_loop();
 		mainController.get_digital(DIGITAL_R2) ? shifted_loop() : regular_loop();
-		printf("%d\n", cata_rotation_sensor.get_position());
 		pros::c::delay(5);
 	}
 }
