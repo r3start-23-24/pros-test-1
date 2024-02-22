@@ -60,11 +60,6 @@ void auton_start() {
     ratchet_piston.set_value(true);
     pros::c::delay(200);
     blocker_move(down_pos);
-    while (true) {
-        printf("x: %f, ", lemlib_chassis.getPose().x);
-        printf("y: %f, ", lemlib_chassis.getPose().y);
-        printf("theta: %f\n", lemlib_chassis.getPose().theta);
-    }
 }
 
 void autonomous() {

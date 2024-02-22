@@ -84,17 +84,17 @@ void awp_auton() {
     lemlib_chassis.moveTo(-10, 2.3*one_lemlib_tile, 1500);
     pros::c::delay(500);
     lemlib_chassis.moveTo(0, 2.3*one_lemlib_tile, 1500);
-    lemlib_chassis.moveTo(0, 1.5*one_lemlib_tile, 1500);
-    /*
-	lemlib_chassis.moveTo(-12, 0, 3000, 60);
-	lemlib_chassis.turnTo(-24, 6, 1000, false, 127);
-    */
-    lemlib_chassis.moveTo(-26, 18, 3000, 100);
-    back_left_wing.set_value(true);
+    lemlib_chassis.moveTo(0, 0, 1500);
+    lemlib_chassis.moveTo(-26, 18, 3000, 50);
+    lemlib_chassis.turnTo(0, -3, 1500);
+    back_right_wing.set_value(true);
     pros::c::delay(200);
     lemlib_chassis.moveTo(0, 0, 3000, 127);
-    back_left_wing.set_value(false);
+    back_right_wing.set_value(false);
     pros::c::delay(200);
     lemlib_chassis.turnTo(-1000, 0, 1500, true);
     lemlib_chassis.moveTo(0.7*one_lemlib_tile, 0, 3000, 100);
+    // lock the motors
+    // intake wheels up
+    // then leng :)
 }
