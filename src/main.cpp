@@ -30,7 +30,7 @@ void blocker_move(float pos) {
 	while (!(cata_rotation_sensor.get_position() > pos-allowance && cata_rotation_sensor.get_position() < pos+allowance))
 	{
 		pros::c::delay(5);
-        printf("%d\n", cata_rotation_sensor.get_position());
+        //printf("%d\n", cata_rotation_sensor.get_position());
 	}
 	cata_motor.brake();
 	pros::c::delay(50);
@@ -77,7 +77,7 @@ void autonomous() {
         default:
             break;
     }*/
-	awp_auton();
+    points_auton();
 }
 
 void drive_loop() {
