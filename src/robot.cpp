@@ -19,10 +19,10 @@ pros::Rotation cata_rotation_sensor (15);
 
 pros::Motor intake_motor (14, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
 
-pros::ADIDigitalOut pto (4);
 pros::ADIDigitalOut front_left_wing (1);
 pros::ADIDigitalOut front_right_wing (2);
 pros::ADIDigitalOut back_left_wing (3);
+pros::ADIDigitalOut back_right_wing(4);
 pros::ADIDigitalOut ratchet_piston (5); // to be removed
 // ratchet is 5
 
@@ -57,8 +57,8 @@ lemlib::ChassisController_t regular_pid {
     5 // slew rate
 };
 lemlib::ChassisController_t turn_pid {
-    9, // kP 8
-    70, // kD 65
+    8, // kP 8
+    63, // kD 65
     1, // smallErrorRange
     100, // smallErrorTimeout
     3, // largeErrorRange
