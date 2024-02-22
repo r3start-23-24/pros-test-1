@@ -13,6 +13,8 @@ bool front_right_wing_extended = false;
 bool back_left_wing_extended = false;
 bool ratchet_piston_extended = false;
 
+bool down_just_pressed = false;
+
 // start move blocker funcs
 const int allowance = 500; // 5 degrees
 const int down_pos = 166;
@@ -60,7 +62,7 @@ void autonomous() {
 	cata_motor.move_relative(100, 100);
 	pros::c::delay(1000);
 	cata_motor.move_relative(-100, 100);
-    switch (selector::auton) {
+    /*switch (selector::auton) {
         case 0:
             skills_auton();
             break;
@@ -72,7 +74,8 @@ void autonomous() {
             break;
         default:
             break;
-    }
+    }*/
+	awp_auton();
 }
 
 void drive_loop() {
@@ -92,8 +95,6 @@ void drive_loop() {
 	right_drive_motors.move(right);
 }
 void regular_loop() {
-	// puncher = false, blocker = true
-
     if (mainController.get_digital(DIGITAL_X))
     {
         lemlib_chassis.moveTo(0, 0, 2000, 50);
@@ -113,9 +114,14 @@ void regular_loop() {
         pto.set_value(false);
 		ratchet_piston.set_value(true);
         cata_motor.move_velocity(-100);
+		down_just_pressed = true;
     }
 	else
 	{
+		if (down_just_pressed) {
+			ratchet_piston.set_value(false);
+			down_just_pressed = false;
+		}
 		cata_motor.brake();
 		cata_motor.move_velocity(0);
 	}
@@ -157,6 +163,21 @@ void shifted_loop() {
         back_left_wing_extended = !back_left_wing_extended;
         back_left_wing.set_value(back_left_wing_extended);
 	}
+	if (mainController.get_digital(DIGITAL_L1))
+	{
+		// blocker
+        pto.set_value(false);
+		ratchet_piston.set_value(true);
+		cata_motor.move_velocity(100);
+	}
+	else if (mainController.get_digital(DIGITAL_L2))
+    {
+		// blocker
+        pto.set_value(false);
+		ratchet_piston.set_value(true);
+        cata_motor.move_velocity(-100);
+		down_just_pressed = true;
+    }
 }
 
 void opcontrol() {
