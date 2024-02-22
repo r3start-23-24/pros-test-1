@@ -4,6 +4,7 @@
 #include "pros/misc.h"
 #include "pros/motors.h"
 #include "pros/rtos.h"
+#include "pros/rtos.hpp"
 #include "robot.hpp"
 #include "autons.hpp"
 #include "autoSelect/selection.h"
@@ -11,22 +12,21 @@
 bool front_left_wing_extended = false;
 bool front_right_wing_extended = false;
 bool back_left_wing_extended = false;
+bool back_right_wing_extended = false;
 bool ratchet_piston_extended = false;
 
 bool down_just_pressed = false;
 
 // start move blocker funcs
 const int allowance = 500; // 5 degrees
-const int down_pos = 166;
-const int blocker_up_pos = -102000;
-const int hang_up_pos = 47000;
+const int down_pos = 0;
+const int high_hang_pos = 106514;
+const int sidebar_hang_pos = 73907;
 
 void blocker_move(float pos) {
 	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-	if (cata_rotation_sensor.get_position() - pos > 0);
-    // actually do this lmao
-    // needs to determine direction to move motor
-	cata_motor.move(127);
+    if (cata_rotation_sensor.get_position() - pos > 0) cata_motor.move(-127);
+    else cata_motor.move(127);
 	while (!(cata_rotation_sensor.get_position() > pos-allowance && cata_rotation_sensor.get_position() < pos+allowance))
 	{
 		pros::c::delay(5);
@@ -56,12 +56,19 @@ void disabled() {}
 
 void competition_initialize() {}
 
+void auton_start() {
+    ratchet_piston.set_value(true);
+    pros::c::delay(200);
+    blocker_move(down_pos);
+    while (true) {
+        printf("x: %f, ", lemlib_chassis.getPose().x);
+        printf("y: %f, ", lemlib_chassis.getPose().y);
+        printf("theta: %f\n", lemlib_chassis.getPose().theta);
+    }
+}
+
 void autonomous() {
-	ratchet_piston.set_value(true);
-	pros::c::delay(200);
-	cata_motor.move_relative(100, 100);
-	pros::c::delay(1000);
-	cata_motor.move_relative(-100, 100);
+    pros::Task auton_start_thread(auton_start);
     /*switch (selector::auton) {
         case 0:
             skills_auton();
@@ -103,33 +110,21 @@ void regular_loop() {
 
 	if (mainController.get_digital(DIGITAL_UP))
 	{
-		// blocker
-        pto.set_value(false);
-		ratchet_piston.set_value(true);
+        ratchet_piston.set_value(true);
+        blocker_move(sidebar_hang_pos);
 		cata_motor.move_velocity(100);
 	}
 	else if (mainController.get_digital(DIGITAL_DOWN))
     {
-		// blocker
-        pto.set_value(false);
 		ratchet_piston.set_value(true);
+        blocker_move(down_pos);
         cata_motor.move_velocity(-100);
-		down_just_pressed = true;
+        // push ratchet in
     }
-	else
-	{
-		if (down_just_pressed) {
-			ratchet_piston.set_value(false);
-			down_just_pressed = false;
-		}
-		cata_motor.brake();
-		cata_motor.move_velocity(0);
-	}
 	
 	if (mainController.get_digital(DIGITAL_R1))
 	{
 		// puncher
-        pto.set_value(true);
 		cata_motor.move_velocity(-100);
 	}
 
@@ -158,22 +153,31 @@ void regular_loop() {
 	}
 }
 void shifted_loop() {
-	if (mainController.get_digital_new_press(DIGITAL_LEFT))
+    if (mainController.get_digital_new_press(DIGITAL_LEFT))
 	{
         back_left_wing_extended = !back_left_wing_extended;
         back_left_wing.set_value(back_left_wing_extended);
 	}
+    else if (mainController.get_digital_new_press(DIGITAL_RIGHT))
+	{
+        back_right_wing_extended = !back_right_wing_extended;
+        back_right_wing.set_value(back_right_wing_extended);
+	}
+
+    if (mainController.get_digital_new_press(DIGITAL_UP))
+    {
+        blocker_move(high_hang_pos);
+    }
+
 	if (mainController.get_digital(DIGITAL_L1))
 	{
 		// blocker
-        pto.set_value(false);
 		ratchet_piston.set_value(true);
 		cata_motor.move_velocity(100);
 	}
 	else if (mainController.get_digital(DIGITAL_L2))
     {
 		// blocker
-        pto.set_value(false);
 		ratchet_piston.set_value(true);
         cata_motor.move_velocity(-100);
 		down_just_pressed = true;
@@ -184,6 +188,7 @@ void opcontrol() {
 	while (true) {
 		drive_loop();
 		mainController.get_digital(DIGITAL_R2) ? shifted_loop() : regular_loop();
+        //printf("%d\n", cata_rotation_sensor.get_position());
 		pros::c::delay(5);
 	}
 }
