@@ -15,19 +15,21 @@ bool back_left_wing_extended = false;
 bool back_right_wing_extended = false;
 bool ratchet_piston_extended = false;
 
-bool down_just_pressed = false;
-
-// start move blocker funcs
 const int allowance = 500; // 5 degrees
 const int down_pos = 0;
 const int high_hang_pos = 106514;
 const int sidebar_hang_pos = 73907;
 
+bool cata_was_moving = false;
+bool cata_toggle_on = false;
+
+bool skills = false;
+
 void blocker_move(float pos) {
 	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     if (cata_rotation_sensor.get_position() - pos > 0) cata_motor.move(-127);
     else cata_motor.move(127);
-	while (!(cata_rotation_sensor.get_position() > pos-allowance && cata_rotation_sensor.get_position() < pos+allowance))
+	while (!(cata_rotation_sensor.get_position() > (pos-allowance) && cata_rotation_sensor.get_position() < (pos+allowance) ))
 	{
 		pros::c::delay(5);
         //printf("%d\n", cata_rotation_sensor.get_position());
@@ -59,7 +61,7 @@ void competition_initialize() {}
 void auton_start() {
     ratchet_piston.set_value(true);
     pros::c::delay(200);
-    blocker_move(down_pos);
+    if (!skills) blocker_move(down_pos);
 }
 
 void autonomous() {
@@ -67,6 +69,7 @@ void autonomous() {
     /*switch (selector::auton) {
         case 0:
             skills_auton();
+            skills = true;
             break;
         case 1:
             points_auton();
@@ -97,31 +100,22 @@ void drive_loop() {
 	right_drive_motors.move(right);
 }
 void regular_loop() {
-    if (mainController.get_digital(DIGITAL_X))
-    {
-        lemlib_chassis.moveTo(0, 0, 2000, 50);
-        lemlib_chassis.turnTo(100, 0, 2000, false, 50);
+	if (mainController.get_digital_new_press(DIGITAL_R1) && skills)
+	{
+        if (cata_toggle_on)
+        {
+            cata_motor.brake();
+            cata_toggle_on = false;
+        }
+        else
+        {
+            cata_motor.move_velocity(-100);
+            cata_toggle_on = true;
+        }
     }
 
-	if (mainController.get_digital(DIGITAL_UP))
-	{
-        ratchet_piston.set_value(true);
-        blocker_move(sidebar_hang_pos);
-		cata_motor.move_velocity(100);
-	}
-	else if (mainController.get_digital(DIGITAL_DOWN))
-    {
-		ratchet_piston.set_value(true);
-        blocker_move(down_pos);
-        cata_motor.move_velocity(-100);
-        // push ratchet in
-    }
-	
-	if (mainController.get_digital(DIGITAL_R1))
-	{
-		// puncher
-		cata_motor.move_velocity(-100);
-	}
+    if (mainController.get_digital_new_press(DIGITAL_UP) && !skills) blocker_move(sidebar_hang_pos);
+    else if (mainController.get_digital_new_press(DIGITAL_DOWN) && !skills) blocker_move(down_pos);
 
 	if (mainController.get_digital(DIGITAL_L1))
 	{
@@ -159,23 +153,24 @@ void shifted_loop() {
         back_right_wing.set_value(back_right_wing_extended);
 	}
 
-    if (mainController.get_digital_new_press(DIGITAL_UP))
-    {
-        blocker_move(high_hang_pos);
-    }
+    if (mainController.get_digital_new_press(DIGITAL_UP) && !skills) blocker_move(high_hang_pos);
 
-	if (mainController.get_digital(DIGITAL_L1))
-	{
-		// blocker
-		ratchet_piston.set_value(true);
-		cata_motor.move_velocity(100);
-	}
-	else if (mainController.get_digital(DIGITAL_L2))
+    if (!skills)
     {
-		// blocker
-		ratchet_piston.set_value(true);
-        cata_motor.move_velocity(-100);
-		down_just_pressed = true;
+        if (mainController.get_digital(DIGITAL_L1))
+        {
+            cata_motor.move(127);
+            cata_was_moving = true;
+        }
+        else if (mainController.get_digital(DIGITAL_L2)) 
+        {
+            cata_motor.move(-127);
+            cata_was_moving = true;
+        }
+        else if (cata_was_moving)
+        {
+            cata_motor.brake();
+        }
     }
 }
 
