@@ -26,7 +26,6 @@ bool cata_toggle_on = false;
 bool skills = false;
 
 void blocker_move(float pos) {
-	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     if (cata_rotation_sensor.get_position() - pos > 0) cata_motor.move(-127);
     else cata_motor.move(127);
 	while (!(cata_rotation_sensor.get_position() > (pos-allowance) && cata_rotation_sensor.get_position() < (pos+allowance) ))
@@ -35,10 +34,14 @@ void blocker_move(float pos) {
         //printf("%d\n", cata_rotation_sensor.get_position());
 	}
 	cata_motor.brake();
-	pros::c::delay(50);
-	cata_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 }
-// end move blocker funcs
+
+void blocker_move_thread() {
+    if (mainController.get_digital_new_press(DIGITAL_UP) && mainController.get_digital(DIGITAL_R2)) blocker_move(high_hang_pos); // shifted
+    else if (mainController.get_digital_new_press(DIGITAL_UP)) blocker_move(sidebar_hang_pos);
+    else if (mainController.get_digital_new_press(DIGITAL_DOWN)) blocker_move(down_pos);
+}
+
 
 void initialize() {
 	lemlib_chassis.calibrate();
@@ -48,7 +51,7 @@ void initialize() {
 	cata_rotation_sensor.set_data_rate(5);
     // default is 10 (ms)
 
-	cata_motor.set_brake_mode(MOTOR_BRAKE_COAST);
+	cata_motor.set_brake_mode(MOTOR_BRAKE_HOLD);
 	intake_motor.set_brake_mode(MOTOR_BRAKE_BRAKE);
 	left_drive_motors.set_brake_modes(MOTOR_BRAKE_COAST);
 	right_drive_motors.set_brake_modes(MOTOR_BRAKE_COAST);
@@ -114,9 +117,6 @@ void regular_loop() {
         }
     }
 
-    if (mainController.get_digital_new_press(DIGITAL_UP) && !skills) blocker_move(sidebar_hang_pos);
-    else if (mainController.get_digital_new_press(DIGITAL_DOWN) && !skills) blocker_move(down_pos);
-
 	if (mainController.get_digital(DIGITAL_L1))
 	{
 		intake_motor.move(-127);
@@ -153,8 +153,6 @@ void shifted_loop() {
         back_right_wing.set_value(back_right_wing_extended);
 	}
 
-    if (mainController.get_digital_new_press(DIGITAL_UP) && !skills) blocker_move(high_hang_pos);
-
     if (!skills)
     {
         if (mainController.get_digital(DIGITAL_L1))
@@ -175,6 +173,9 @@ void shifted_loop() {
 }
 
 void opcontrol() {
+    if (!skills) {
+        pros::Task blocker_move_thread_thr(blocker_move_thread);
+    }
 	while (true) {
 		drive_loop();
 		mainController.get_digital(DIGITAL_R2) ? shifted_loop() : regular_loop();
