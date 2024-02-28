@@ -28,24 +28,38 @@ void turn_lemlib(int alpha, int velocity = 50) {
 }
 
 void skills_auton() {
+    intake_motor.move(-127);
+    pros::c::delay(500);
     lemlib_chassis.moveTo(0.2*one_lemlib_tile, -0.7*one_lemlib_tile, 2500, 80);
     lemlib_chassis.turnTo(one_lemlib_tile, 1.5*one_lemlib_tile, 1500);
-	ratchet_piston.set_value(true);
-    cata_motor.move(127);
-    pros::c::delay(25000); // 25 seconds
-    cata_motor.move(0);
-    lemlib_chassis.moveTo(-2*one_lemlib_tile, -6.5*one_lemlib_tile, 2500, 80);
-    lemlib_chassis.turnTo(0, 10000, 1500);
-    intake_motor.move(-127);
-    pros::c::delay(15000); // 15 seconds
-    lemlib_chassis.moveTo(0, 3.3*one_lemlib_tile, 3000, 100);
-    lemlib_chassis.moveTo(3.8*one_lemlib_tile, 0.5*one_lemlib_tile, 2000, 90);
-    lemlib_chassis.moveTo(0, 3.3*one_lemlib_tile, 3000, 100);
-    lemlib_chassis.turnTo(10000, 3.3*one_lemlib_tile, 1500);
-    lemlib_chassis.moveTo(3*one_lemlib_tile, 3.3*one_lemlib_tile, 3000);
+    back_left_wing.set_value(true);
+    puncher_motor.move(127);
+    intake_motor.move(0);
+    pros::c::delay(30000); // punch for __ secs
+    mainController.rumble("--");
+    pros::c::delay(5000);
+    puncher_motor.move(0);
+    back_left_wing.set_value(false);
+    lemlib_chassis.moveTo(-8, 0, 3000, 100);
+    lemlib_chassis.moveTo(-8, 3.4*one_lemlib_tile, 3000, 100); // gone under bar
+    lemlib_chassis.moveTo(11, 3*one_lemlib_tile, 2000);
+    lemlib_chassis.moveTo(11, 1.65*one_lemlib_tile, 2000); // dodge pos
     front_left_wing.set_value(true);
     front_right_wing.set_value(true);
-    move_lemlib(1.2, 'y');
+    lemlib_chassis.moveTo(1.25*one_lemlib_tile, 3*one_lemlib_tile, 2000); // ready to push
+    lemlib_chassis.turnTo(1.5*one_lemlib_tile, 1000, 1500); // turn to face goal
+    lemlib_chassis.moveTo(1.5*one_lemlib_tile, 3*one_lemlib_tile, 2000); // push in
+    lemlib_chassis.moveTo(1.5*one_lemlib_tile, 1.75*one_lemlib_tile, 2000); // pull out
+    lemlib_chassis.moveTo(1.5*one_lemlib_tile, 3*one_lemlib_tile, 2000); // push in
+    lemlib_chassis.moveTo(1.5*one_lemlib_tile, 1.75*one_lemlib_tile, 2000); // pull out
+    front_left_wing.set_value(false);
+    front_right_wing.set_value(false);
+    lemlib_chassis.moveTo(2.5*one_lemlib_tile, 1.75*one_lemlib_tile, 2000); // push 3 pos
+    front_left_wing.set_value(true);
+    front_right_wing.set_value(true);
+    lemlib_chassis.turnTo(2*one_lemlib_tile, 10000, 2000); // push 3 pos
+    lemlib_chassis.moveTo(2*one_lemlib_tile, 3.5*one_lemlib_tile, 2000); // push in
+    lemlib_chassis.moveTo(2*one_lemlib_tile, 1.75*one_lemlib_tile, 2000); // pull out
 }
 
 void points_auton() {
@@ -93,12 +107,24 @@ void open_wing() {
     back_right_wing.set_value(true);
 }
 
+void stop_if_bad() {
+    while (true) {
+        if (inertial_sensor.get_accel().x == 0)
+        {
+            left_drive_motors.brake();
+            right_drive_motors.brake();
+        }
+        pros::c::delay(5);
+    }
+}
+
 void awp_auton() {
 	intake_motor.move(127);
 	move_lemlib(2.25, 'y', 90);
     lemlib_chassis.turnTo(100, 2.25*one_lemlib_tile, 1000);
 	front_left_wing.set_value(true);
     lemlib_chassis.turnTo(-1000, 2.25*one_lemlib_tile, 1000, 60);
+    pros::Task stop_thr(stop_if_bad);
     lemlib_chassis.moveTo(1.1*one_lemlib_tile, 2.25*one_lemlib_tile, 3000, 100);
     // pushed over
 	front_left_wing.set_value(false);
