@@ -13,10 +13,9 @@ bool front_left_wing_extended = false;
 bool front_right_wing_extended = false;
 bool back_left_wing_extended = false;
 bool back_right_wing_extended = false;
-bool ratchet_piston_extended = false;
 
 const int allowance = 500; // 5 degrees
-const int down_pos = 0;
+const int down_pos = 10000;
 const int high_hang_pos = 106514;
 const int sidebar_hang_pos = 73907;
 
@@ -26,32 +25,41 @@ bool cata_toggle_on = false;
 bool skills = false;
 
 void blocker_move(float pos) {
-    if (cata_rotation_sensor.get_position() - pos > 0) cata_motor.move(-127);
-    else cata_motor.move(127);
+    if (cata_rotation_sensor.get_position() - pos > 0) hang_motor.move(-127);
+    else hang_motor.move(127);
 	while (!(cata_rotation_sensor.get_position() > (pos-allowance) && cata_rotation_sensor.get_position() < (pos+allowance) ))
 	{
 		pros::c::delay(5);
         //printf("%d\n", cata_rotation_sensor.get_position());
 	}
-	cata_motor.brake();
+	hang_motor.brake();
 }
 
 void blocker_move_thread() {
-    if (mainController.get_digital_new_press(DIGITAL_UP) && mainController.get_digital(DIGITAL_R2)) blocker_move(high_hang_pos); // shifted
-    else if (mainController.get_digital_new_press(DIGITAL_UP)) blocker_move(sidebar_hang_pos);
-    else if (mainController.get_digital_new_press(DIGITAL_DOWN)) blocker_move(down_pos);
+    while (true) {
+        if (mainController.get_digital_new_press(DIGITAL_UP) && !mainController.get_digital(DIGITAL_R2)) blocker_move(sidebar_hang_pos);
+        else if (mainController.get_digital_new_press(DIGITAL_DOWN) && !mainController.get_digital(DIGITAL_R2)) blocker_move(down_pos);
+        pros::c::delay(5);
+    }
 }
 
+void ratchet_lock() {
+    pros::c::delay(103*1000);
+    ratchet_piston.set_value(true);
+}
 
 void initialize() {
 	lemlib_chassis.calibrate();
     lemlib_chassis.setPose(0,0,0);
 	selector::init();
 
+    if (selector::auton == 0) skills = true;
+
 	cata_rotation_sensor.set_data_rate(5);
     // default is 10 (ms)
 
-	cata_motor.set_brake_mode(MOTOR_BRAKE_HOLD);
+	hang_motor.set_brake_mode(MOTOR_BRAKE_HOLD);
+    puncher_motor.set_brake_mode(MOTOR_BRAKE_COAST);
 	intake_motor.set_brake_mode(MOTOR_BRAKE_BRAKE);
 	left_drive_motors.set_brake_modes(MOTOR_BRAKE_COAST);
 	right_drive_motors.set_brake_modes(MOTOR_BRAKE_COAST);
@@ -62,14 +70,12 @@ void disabled() {}
 void competition_initialize() {}
 
 void auton_start() {
-    ratchet_piston.set_value(true);
-    pros::c::delay(200);
     if (!skills) blocker_move(down_pos);
 }
 
 void autonomous() {
     pros::Task auton_start_thread(auton_start);
-    /*switch (selector::auton) {
+    switch (selector::auton) {
         case 0:
             skills_auton();
             skills = true;
@@ -82,8 +88,7 @@ void autonomous() {
             break;
         default:
             break;
-    }*/
-    points_auton();
+    }
 }
 
 void drive_loop() {
@@ -103,16 +108,23 @@ void drive_loop() {
 	right_drive_motors.move(right);
 }
 void regular_loop() {
-	if (mainController.get_digital_new_press(DIGITAL_R1) && skills)
+    if (mainController.get_digital_new_press(DIGITAL_X) && skills)
+    {
+        const int one_lemlib_tile = 24;
+        lemlib_chassis.moveTo(0.2*one_lemlib_tile, -0.7*one_lemlib_tile, 2500, 80);
+        lemlib_chassis.turnTo(one_lemlib_tile, 1.5*one_lemlib_tile, 1500);
+        back_left_wing.set_value(true);
+    }
+	if (mainController.get_digital_new_press(DIGITAL_R1))
 	{
         if (cata_toggle_on)
         {
-            cata_motor.brake();
+            puncher_motor.brake();
             cata_toggle_on = false;
         }
         else
         {
-            cata_motor.move_velocity(-100);
+            puncher_motor.move_velocity(100);
             cata_toggle_on = true;
         }
     }
@@ -153,33 +165,32 @@ void shifted_loop() {
         back_right_wing.set_value(back_right_wing_extended);
 	}
 
-    if (!skills)
+    if (mainController.get_digital(DIGITAL_L1))
     {
-        if (mainController.get_digital(DIGITAL_L1))
-        {
-            cata_motor.move(127);
-            cata_was_moving = true;
-        }
-        else if (mainController.get_digital(DIGITAL_L2)) 
-        {
-            cata_motor.move(-127);
-            cata_was_moving = true;
-        }
-        else if (cata_was_moving)
-        {
-            cata_motor.brake();
-        }
+        hang_motor.move(127);
+        cata_was_moving = true;
+    }
+    else if (mainController.get_digital(DIGITAL_L2)) 
+    {
+        hang_motor.move(-127);
+        cata_was_moving = true;
+    }
+    else if (cata_was_moving)
+    {
+        hang_motor.brake();
     }
 }
 
 void opcontrol() {
-    if (!skills) {
+    //if (!skills) {
         pros::Task blocker_move_thread_thr(blocker_move_thread);
-    }
+        pros::Task ratchet_lock_thread(ratchet_lock);
+    //}
 	while (true) {
 		drive_loop();
 		mainController.get_digital(DIGITAL_R2) ? shifted_loop() : regular_loop();
         //printf("%d\n", cata_rotation_sensor.get_position());
+        printf("x: %f, y: %f, z: %f", inertial_sensor.get_accel().x, inertial_sensor.get_accel().y, inertial_sensor.get_accel().z);
 		pros::c::delay(5);
 	}
 }
