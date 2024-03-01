@@ -20,11 +20,17 @@ void move_lemlib(float tiles, char direction, int velocity = 90) {
     lemlib_chassis.moveTo(lemlib_x, lemlib_y, 3000, velocity);
 }
 
-void turn_lemlib(int alpha, int velocity = 50) {
-    int theta = lemlib_chassis.getPose().theta;
-    theta = lemlib::degToRad(theta);
-    alpha = lemlib::degToRad(alpha);
-    lemlib_chassis.turnTo(lemlib_x - sin(theta + alpha), lemlib_y + cos(theta + alpha), 1000);
+const int oneTile = 160;
+void move_forward_old(float tiles, int velocity) {
+    left_drive_motors.move_relative(tiles * oneTile, velocity);
+    right_drive_motors.move_relative(tiles * oneTile, velocity);
+    pros::c::delay(100);
+    while (left_motor_1.get_actual_velocity() > 2)
+    {
+        pros::c::delay(5);
+    }
+    left_drive_motors.brake();
+    right_drive_motors.brake();
 }
 
 void skills_auton() {
@@ -102,17 +108,46 @@ void points_auton() {
     move_lemlib(-0.6, 'y');
 }
 
+void dodge_auton() {
+    intake_motor.move(127);
+    lemlib_chassis.moveTo(-0.75*one_lemlib_tile, 2*one_lemlib_tile, 1500);
+    // picked up ball one
+    lemlib_chassis.turnTo(100, 2*one_lemlib_tile, 1500);
+    intake_motor.move(-127);
+    pros::c::delay(1000);
+    // outtaken
+    intake_motor.move(127);
+    lemlib_chassis.moveTo(-1.75*one_lemlib_tile, 2*one_lemlib_tile, 1500);
+    // picked up ball two
+    lemlib_chassis.turnTo(100, 2*one_lemlib_tile, 1500);
+    lemlib_chassis.moveTo(-0.75*one_lemlib_tile, 2*one_lemlib_tile, 1500);
+    intake_motor.move(-127);
+    pros::c::delay(1000);
+    // outtaken
+    intake_motor.move(127);
+    lemlib_chassis.moveTo(-1.75*one_lemlib_tile, one_lemlib_tile, 1500);
+    lemlib_chassis.moveTo(-0.75*one_lemlib_tile, 2*one_lemlib_tile, 1500);
+    intake_motor.move(-127);
+    front_left_wing.set_value(true);
+    front_right_wing.set_value(true);
+    lemlib_chassis.moveTo(0.5, 2, 1500);
+}
+
 void open_wing() {
     pros::c::delay(400);
     back_right_wing.set_value(true);
 }
 
+int mode = 0;
+
 void stop_if_bad() {
+    pros::c::delay(200);
     while (true) {
-        if (inertial_sensor.get_accel().x == 0)
+        if ( (mode == 1 && inertial_sensor.get_accel().x > 0.04) || (mode == 2 && inertial_sensor.get_accel().x < 0.0425) )
         {
             left_drive_motors.brake();
             right_drive_motors.brake();
+            break;
         }
         pros::c::delay(5);
     }
@@ -120,20 +155,23 @@ void stop_if_bad() {
 
 void awp_auton() {
 	intake_motor.move(127);
-	move_lemlib(2.25, 'y', 90);
+	move_lemlib(2.25, 'y', 130);
     lemlib_chassis.turnTo(100, 2.25*one_lemlib_tile, 1000);
 	front_left_wing.set_value(true);
     lemlib_chassis.turnTo(-1000, 2.25*one_lemlib_tile, 1000, 60);
+    mode = 1;
     pros::Task stop_thr(stop_if_bad);
-    lemlib_chassis.moveTo(1.1*one_lemlib_tile, 2.25*one_lemlib_tile, 3000, 100);
+    lemlib_chassis.moveTo(1.1*one_lemlib_tile, 2.25*one_lemlib_tile, 3000, 150);
     // pushed over
 	front_left_wing.set_value(false);
     lemlib_chassis.turnTo(-1000, 2.25*one_lemlib_tile, 1500);
     intake_motor.move(-127);
+    mode = 2;
+    pros::Task stop_thr_2(stop_if_bad);
     lemlib_chassis.moveTo(-10, 2.25*one_lemlib_tile, 1500);
     pros::c::delay(500);
     // scored coloured ball
-    lemlib_chassis.moveTo(0, 2.25*one_lemlib_tile, 1500);
+    lemlib_chassis.moveTo(-0.2, 2.25*one_lemlib_tile, 1500);
     left_drive_motors.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
     right_drive_motors.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
     lemlib_chassis.moveTo(0, -2, 1500, 200);
@@ -144,12 +182,12 @@ void awp_auton() {
     lemlib_chassis.turnTo(0, -12, 1500);
     pros::Task open_wing_thread(open_wing);
     pros::c::delay(200);
-    lemlib_chassis.moveTo(-2, 2, 3000, 127); // dis
+    lemlib_chassis.moveTo(2, -14, 1500, 50); // dis
     back_right_wing.set_value(false);
-    pros::c::delay(400);
+    pros::c::delay(100);
     back_right_wing.set_value(false);
     pros::c::delay(200);
     back_right_wing.set_value(false);
-    lemlib_chassis.turnTo(-1000, 0, 1500, true);
-    lemlib_chassis.moveTo(0.9*one_lemlib_tile, 0, 3000, 100);
+    lemlib_chassis.turnTo(-100, 20, 1500, true, 80); // move 2.3?
+    lemlib_chassis.moveTo(24, -4.8, 1500, 70);
 }

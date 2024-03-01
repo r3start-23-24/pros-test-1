@@ -44,7 +44,11 @@ void blocker_move_thread() {
 }
 
 void ratchet_lock() {
-    pros::c::delay(103*1000);
+    pros::c::delay(75*1000);
+    mainController.rumble("--");
+    pros::c::delay(15*1000);
+    mainController.rumble("--");
+    pros::c::delay(12*1000);
     ratchet_piston.set_value(true);
 }
 
@@ -52,8 +56,6 @@ void initialize() {
 	lemlib_chassis.calibrate();
     lemlib_chassis.setPose(0,0,0);
 	selector::init();
-
-    if (selector::auton == 0) skills = true;
 
 	cata_rotation_sensor.set_data_rate(5);
     // default is 10 (ms)
@@ -85,6 +87,9 @@ void autonomous() {
             break;
         case 2:
             awp_auton();
+            break;
+        case -2:
+            dodge_auton();
             break;
         default:
             break;
@@ -182,15 +187,15 @@ void shifted_loop() {
 }
 
 void opcontrol() {
-    //if (!skills) {
+    if (!skills) {
         pros::Task blocker_move_thread_thr(blocker_move_thread);
         pros::Task ratchet_lock_thread(ratchet_lock);
-    //}
+    }
 	while (true) {
 		drive_loop();
 		mainController.get_digital(DIGITAL_R2) ? shifted_loop() : regular_loop();
         //printf("%d\n", cata_rotation_sensor.get_position());
-        printf("x: %f, y: %f, z: %f", inertial_sensor.get_accel().x, inertial_sensor.get_accel().y, inertial_sensor.get_accel().z);
+        printf("x: %f, y: %f, z: %f\n", inertial_sensor.get_accel().x, inertial_sensor.get_accel().y, inertial_sensor.get_accel().z);
 		pros::c::delay(5);
 	}
 }
