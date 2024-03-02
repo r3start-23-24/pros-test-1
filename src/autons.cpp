@@ -41,7 +41,7 @@ void skills_auton() {
     back_left_wing.set_value(true);
     puncher_motor.move(127);
     intake_motor.move(0);
-    pros::c::delay(30000); // punch for __ secs
+    pros::c::delay(28000); // punch for __ secs
     mainController.rumble("--");
     pros::c::delay(5000);
     puncher_motor.move(0);
@@ -66,6 +66,14 @@ void skills_auton() {
     lemlib_chassis.turnTo(2*one_lemlib_tile, 10000, 2000); // push 3 pos
     lemlib_chassis.moveTo(2*one_lemlib_tile, 3.5*one_lemlib_tile, 2000); // push in
     lemlib_chassis.moveTo(2*one_lemlib_tile, 1.75*one_lemlib_tile, 2000); // pull out
+    lemlib_chassis.moveTo(2*one_lemlib_tile, 3.5*one_lemlib_tile, 2000); // push in
+    lemlib_chassis.moveTo(2*one_lemlib_tile, 1.75*one_lemlib_tile, 2000); // pull out
+    front_left_wing.set_value(false);
+    front_right_wing.set_value(false);
+    lemlib_chassis.moveTo(4.1*one_lemlib_tile, 3.4*one_lemlib_tile, 3000, 100);
+    lemlib_chassis.moveTo(4.1*one_lemlib_tile, 4.4*one_lemlib_tile, 1500, 100);
+    lemlib_chassis.moveTo(3.1*one_lemlib_tile, 4.4*one_lemlib_tile, 750, 100);
+    lemlib_chassis.moveTo(4.1*one_lemlib_tile, 4.4*one_lemlib_tile, 1500, 100);
 }
 
 void points_auton() {
@@ -109,28 +117,40 @@ void points_auton() {
 }
 
 void dodge_auton() {
+    lemlib_chassis.setPose(0, 0, 0);
     intake_motor.move(127);
-    lemlib_chassis.moveTo(-0.75*one_lemlib_tile, 2*one_lemlib_tile, 1500);
+    lemlib_chassis.moveTo(-0.65*one_lemlib_tile, 2.1*one_lemlib_tile, 1500);
     // picked up ball one
     lemlib_chassis.turnTo(100, 2*one_lemlib_tile, 1500);
     intake_motor.move(-127);
-    pros::c::delay(1000);
+    pros::c::delay(750);
     // outtaken
     intake_motor.move(127);
-    lemlib_chassis.moveTo(-1.75*one_lemlib_tile, 2*one_lemlib_tile, 1500);
+    lemlib_chassis.turnTo(-100, 2.2*one_lemlib_tile, 1500);
+    lemlib_chassis.moveTo(-1.25*one_lemlib_tile, 2.3*one_lemlib_tile, 1500);
     // picked up ball two
-    lemlib_chassis.turnTo(100, 2*one_lemlib_tile, 1500);
-    lemlib_chassis.moveTo(-0.75*one_lemlib_tile, 2*one_lemlib_tile, 1500);
+    lemlib_chassis.turnTo(100, 2.1*one_lemlib_tile, 1500);
+    lemlib_chassis.moveTo(-0.8*one_lemlib_tile, 2.1*one_lemlib_tile, 1500);
     intake_motor.move(-127);
     pros::c::delay(1000);
     // outtaken
     intake_motor.move(127);
-    lemlib_chassis.moveTo(-1.75*one_lemlib_tile, one_lemlib_tile, 1500);
-    lemlib_chassis.moveTo(-0.75*one_lemlib_tile, 2*one_lemlib_tile, 1500);
+    lemlib_chassis.turnTo(-100, 1*one_lemlib_tile, 1500);
+    lemlib_chassis.moveTo(-1.4*one_lemlib_tile, 1.2*one_lemlib_tile, 1500, 100);
+    // picked up ball three
+    lemlib_chassis.turnTo(100, 2*one_lemlib_tile, 1500);
+    lemlib_chassis.moveTo(-1.25*one_lemlib_tile, 2*one_lemlib_tile, 1500);
+    lemlib_chassis.turnTo(100, 2*one_lemlib_tile, 1500);
     intake_motor.move(-127);
+    // outtaken
     front_left_wing.set_value(true);
     front_right_wing.set_value(true);
-    lemlib_chassis.moveTo(0.5, 2, 1500);
+    lemlib_chassis.moveTo(0, 2*one_lemlib_tile, 1500);
+    lemlib_chassis.moveTo(-one_lemlib_tile, 2*one_lemlib_tile, 1500);
+    lemlib_chassis.moveTo(0, 2*one_lemlib_tile, 1500);
+    lemlib_chassis.moveTo(-one_lemlib_tile, 2*one_lemlib_tile, 1500);
+    front_left_wing.set_value(false);
+    front_right_wing.set_value(false);
 }
 
 void open_wing() {
@@ -168,7 +188,7 @@ void awp_auton() {
     intake_motor.move(-127);
     mode = 2;
     pros::Task stop_thr_2(stop_if_bad);
-    lemlib_chassis.moveTo(-10, 2.25*one_lemlib_tile, 1500);
+    lemlib_chassis.moveTo(-5, 2.25*one_lemlib_tile, 1500);
     pros::c::delay(500);
     // scored coloured ball
     lemlib_chassis.moveTo(-0.2, 2.25*one_lemlib_tile, 1500);

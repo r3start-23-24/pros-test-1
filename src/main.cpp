@@ -88,7 +88,7 @@ void autonomous() {
         case 2:
             awp_auton();
             break;
-        case -2:
+        case -1:
             dodge_auton();
             break;
         default:
