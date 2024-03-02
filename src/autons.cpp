@@ -117,7 +117,7 @@ void points_auton() {
 }
 
 void dodge_auton() {
-    lemlib_chassis.setPose(0, 0, 0);
+    lemlib_chassis.setPose(-6, 0, 345);
     intake_motor.move(127);
     lemlib_chassis.moveTo(-0.65*one_lemlib_tile, 2.1*one_lemlib_tile, 1500);
     // picked up ball one
