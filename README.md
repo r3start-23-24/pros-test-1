@@ -1,11 +1,11 @@
 # pros-test-1
 
-Testing the use of PROS with git for source control and collaboration
+The full codebase for the team 13765X MTS_R3START for the 2023-2024 VRC season Over Under.
 
-Includes a gui auton selector as well as gifs on screen.
+Includes an imported gui auton selector.
 
-ADD CREDIT
+Includes autonomous functions to simplify programming, utilises threading to allow catapult control, has logarithmic drivetrain control, and contains logic for a "shift" button.
 
-Includes autonomous functions to simplify programming, and utilises threading to allow catapult control.
+LemLib is used for odometry and PIDs.
 
-Season over :)
+ARCHIVED: This now simply exists as a matter of help for any new teams looking for a basic example of how PROS can be used for VRC programming.
