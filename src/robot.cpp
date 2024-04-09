@@ -14,16 +14,18 @@ pros::Motor right_motor_3 (20, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENC
 pros::Motor_Group left_drive_motors ({left_motor_1, left_motor_2, left_motor_3});
 pros::Motor_Group right_drive_motors ({right_motor_1, right_motor_2, right_motor_3});
 
-pros::Motor cata_motor (17, pros::E_MOTOR_GEARSET_36, true, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor puncher_motor (10, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor hang_motor (17, pros::E_MOTOR_GEARSET_36, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Rotation cata_rotation_sensor (15);
 
 pros::Motor intake_motor (14, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
 
-pros::ADIDigitalOut pto (1);
-pros::ADIDigitalOut front_left_wing (2);
-pros::ADIDigitalOut front_right_wing (3);
-pros::ADIDigitalOut back_left_wing (4);
-pros::ADIDigitalOut back_right_wing (5);
+pros::ADIDigitalOut front_left_wing (1);
+pros::ADIDigitalOut front_right_wing (2);
+pros::ADIDigitalOut back_left_wing (3);
+pros::ADIDigitalOut back_right_wing(4);
+pros::ADIDigitalOut ratchet_piston (5);
+// ratchet is 5
 
 pros::Imu inertial_sensor(16);
 
@@ -56,8 +58,8 @@ lemlib::ChassisController_t regular_pid {
     5 // slew rate
 };
 lemlib::ChassisController_t turn_pid {
-    9, // kP 8
-    70, // kD 65
+    8, // kP 8
+    63, // kD 65
     1, // smallErrorRange
     100, // smallErrorTimeout
     3, // largeErrorRange
